@@ -77,5 +77,35 @@ public interface Component {
      */
     void draw(Graphics g);
 
+    /**
+     * 鼠标点击事件
+     */
+    void mouseClick();
+
+    /**
+     * 鼠标进入事件
+     */
+    void mouseEnter();
+
+    /**
+     * 鼠标离开事件
+     */
+    void mouseLeave();
+
+    /**
+     * 鼠标双击事件
+     */
+    void mouseDoubleClick();
+
+    /**
+     * 鼠标按下事件
+     */
+    void mousePress();
+
+    /**
+     * 鼠标释放事件
+     */
+    void mouseRelease();
+
 
 }

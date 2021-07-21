@@ -62,4 +62,34 @@ public class Button implements Component{
     public void draw(Graphics g) {
 
     }
+
+    @Override
+    public void mouseClick() {
+
+    }
+
+    @Override
+    public void mouseEnter() {
+
+    }
+
+    @Override
+    public void mouseLeave() {
+
+    }
+
+    @Override
+    public void mouseDoubleClick() {
+
+    }
+
+    @Override
+    public void mousePress() {
+
+    }
+
+    @Override
+    public void mouseRelease() {
+
+    }
 }

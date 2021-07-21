@@ -118,6 +118,36 @@ public class TextLabel implements Component{
         g2d.drawString(this.text,this.x+10,this.y+(this.height+textFont.getSize())/2);//xy未文字的左下角
     }
 
+    @Override
+    public void mouseClick() {
+
+    }
+
+    @Override
+    public void mouseEnter() {
+
+    }
+
+    @Override
+    public void mouseLeave() {
+
+    }
+
+    @Override
+    public void mouseDoubleClick() {
+
+    }
+
+    @Override
+    public void mousePress() {
+
+    }
+
+    @Override
+    public void mouseRelease() {
+
+    }
+
     /**
      * 设置文本的字体格式
      * @param font 字体格式
