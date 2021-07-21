@@ -88,6 +88,10 @@ public class Button implements Component{
 
     @Override
     public void draw(Graphics g) {
+        //背景(还有颜色等)
+        g.fillRoundRect(this.x,this.y,this.width,this.height,this.width/10,this.height/10);
+        //边框(颜色)
+        g.drawRoundRect(this.x,this.y,this.width,this.height,this.width/10,this.height/10);
     }
 
     @Override

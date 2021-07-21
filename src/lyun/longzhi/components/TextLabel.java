@@ -1,9 +1,12 @@
 package lyun.longzhi.components;
 
-import sun.font.FontDesignMetrics;
 
 import java.awt.*;
 
+/**
+ * 文本标签控件
+ * 主要用于展示文字内容
+ */
 public class TextLabel implements Component{
     private int width;
     private int height;
