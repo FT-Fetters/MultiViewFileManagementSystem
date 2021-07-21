@@ -1,5 +1,7 @@
 package lyun.longzhi.components;
 
+import sun.font.FontDesignMetrics;
+
 import java.awt.*;
 
 public class TextLabel implements Component{
@@ -13,6 +15,7 @@ public class TextLabel implements Component{
 
     private Color backgroundColor;
     private Color borderColor;
+    private Color textColor;
 
     private Font textFont;
 
@@ -108,7 +111,19 @@ public class TextLabel implements Component{
             g2d.drawRect(this.x,this.y,this.width,this.height);
         }
         //绘制文字
-        g.setFont(this.textFont);
-        g.drawString(this.text,this.x,this.y);
+        Graphics2D g2d = (Graphics2D)g;
+        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);//增加抗锯齿
+        g2d.setColor(textColor);
+        g2d.setFont(this.textFont);
+        g2d.drawString(this.text,this.x+10,this.y+(this.height+textFont.getSize())/2);//xy未文字的左下角
+    }
+
+    /**
+     * 设置文本的字体格式
+     * @param font 字体格式
+     */
+    public void setTextFont(Font font,Color color){
+        this.textFont = font;
+        this.textColor = color;
     }
 }

@@ -12,7 +12,7 @@ import lyun.longzhi.view.MainView;
 public class Main {
 
 
-    public static MainView mainView = new MainView();
+    public static MainView mainView;
     public static JFrame mainFrame = new JFrame("多视图文件管理系统");
 
     public static void main(String[] args) {
@@ -26,12 +26,13 @@ public class Main {
      */
     static void initMainView(){
         Thread mainViewThread = new Thread(mainView);
-        mainFrame.add(mainView);
         mainFrame.setSize(LoadConfigure.getScreenWidth()*2/3, LoadConfigure.getScreenHeight()*2/3);
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setResizable(false);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainViewThread.start();
         mainFrame.setVisible(true);
+        mainView = new MainView();
+        mainFrame.add(mainView);
+        mainViewThread.start();
     }
 }

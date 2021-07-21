@@ -6,8 +6,6 @@ import lyun.longzhi.components.TextLabel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +23,10 @@ public class MainView extends JPanel implements Runnable {
      */
     public MainView(){
         this.setBackground(new Color(32,32,32));
-        TextLabel textLabel = new TextLabel("测试",100,100,0,0);
-        textLabel.setBackground(Color.white);
+        TextLabel textLabel = new TextLabel("C:/", Main.mainFrame.getWidth() -65,35,25,25);
+        textLabel.setBorder(new Color(83,83,83),1);
+        Font font = new Font("微软雅黑",Font.PLAIN,15);
+        textLabel.setTextFont(font,new Color(170,170,170));
         componentList.add(textLabel);
     }
 
