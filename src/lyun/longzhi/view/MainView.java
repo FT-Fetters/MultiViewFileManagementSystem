@@ -1,6 +1,7 @@
 package lyun.longzhi.view;
 
 import lyun.longzhi.Main;
+import lyun.longzhi.components.Button;
 import lyun.longzhi.components.Component;
 import lyun.longzhi.components.TextLabel;
 
@@ -34,6 +35,7 @@ public class MainView extends JPanel implements Runnable {
         Font font = new Font("微软雅黑",Font.PLAIN,15);
         textLabel.setTextFont(font,new Color(170,170,170));
         componentList.add(textLabel);
+
     }
 
     //添加监听器

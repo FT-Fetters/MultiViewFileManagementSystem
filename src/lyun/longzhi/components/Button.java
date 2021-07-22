@@ -3,39 +3,67 @@ package lyun.longzhi.components;
 import java.awt.*;
 
 public class Button implements Component{
+    private int x;
+    private int y;
+    private int width;
+    private int height;
+
+    private String buttonText;
+
+    private boolean mouseInside;
+
+    private Color backgroundColor = new Color(67,149,255);
+    private Color textColor = Color.white;
+
+    Button(String text,int width,int height){
+        this.buttonText = text;
+        this.width = width;
+        this.height = height;
+    }
+
+    Button(String text,int width,int height,int x,int y){
+        this.buttonText = text;
+        this.width = width;
+        this.height = height;
+        this.x = x;
+        this.y = y;
+    }
+
+
     @Override
     public void resize(int width, int height) {
-
+        this.width = width;
+        this.height = height;
     }
 
     @Override
     public int getWidth() {
-        return 0;
+        return this.width;
     }
 
     @Override
     public int getHeight() {
-        return 0;
+        return this.height;
     }
 
     @Override
     public int getX() {
-        return 0;
+        return this.x;
     }
 
     @Override
     public int getY() {
-        return 0;
+        return this.y;
     }
 
     @Override
     public void setX(int x) {
-
+        this.x = x;
     }
 
     @Override
     public void setY(int y) {
-
+        this.y = y;
     }
 
     @Override
@@ -60,7 +88,6 @@ public class Button implements Component{
 
     @Override
     public void draw(Graphics g) {
-
     }
 
     @Override
