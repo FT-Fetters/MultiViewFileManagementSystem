@@ -3,10 +3,14 @@ package lyun.longzhi.view;
 import lyun.longzhi.Main;
 import lyun.longzhi.components.Button;
 import lyun.longzhi.components.Component;
+import lyun.longzhi.components.FileListColumn;
 import lyun.longzhi.components.TextLabel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,18 +33,39 @@ public class MainView extends JPanel implements Runnable {
 
     //添加组件
     public void addComponents(){
-        this.setBackground(new Color(32,32,32));
+        this.setBackground(new Color(25,25,25));
+
         TextLabel textLabel = new TextLabel("C:/", Main.mainFrame.getWidth() -65,35,25,25);
         textLabel.setBorder(new Color(83,83,83),1);
         Font font = new Font("微软雅黑",Font.PLAIN,15);
         textLabel.setTextFont(font,new Color(170,170,170));
         componentList.add(textLabel);
 
+        FileListColumn fileListColumn = new FileListColumn("D:\\",25,75,Main.mainFrame.getWidth() -65,320,10);
+        componentList.add(fileListColumn);
+
     }
 
     //添加监听器
     public void addListener(){
-
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                for (Component component : componentList) {
+                    if (pointInRectangle(
+                            e.getX(),
+                            e.getY(),
+                            component.getX(),
+                            component.getY(),
+                            component.getX()+component.getWidth(),
+                            component.getY()+component.getHeight())
+                    ){
+                        component.mouseClick(e.getX()-component.getX(),e.getY()-component.getY());
+                    }
+                }
+            }
+        });
     }
 
 
