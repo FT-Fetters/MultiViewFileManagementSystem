@@ -1,10 +1,10 @@
 package lyun.longzhi.view;
 
 import lyun.longzhi.Main;
-import lyun.longzhi.components.Button;
 import lyun.longzhi.components.Component;
 import lyun.longzhi.components.FileListColumn;
 import lyun.longzhi.components.TextLabel;
+import lyun.longzhi.utils.RectangleOperation;
 
 import javax.swing.*;
 import java.awt.*;
@@ -53,7 +53,7 @@ public class MainView extends JPanel implements Runnable {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 for (Component component : componentList) {
-                    if (pointInRectangle(
+                    if (RectangleOperation.pointInRectangle(
                             e.getX(),
                             e.getY(),
                             component.getX(),
@@ -62,6 +62,29 @@ public class MainView extends JPanel implements Runnable {
                             component.getY()+component.getHeight())
                     ){
                         component.mouseClick(e.getX()-component.getX(),e.getY()-component.getY());
+                    }
+                }
+            }
+
+
+        });
+
+        this.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                super.mouseMoved(e);
+                for (Component component : componentList) {
+                    if (RectangleOperation.pointInRectangle(
+                            e.getX(),
+                            e.getY(),
+                            component.getX(),
+                            component.getY(),
+                            component.getX()+component.getWidth(),
+                            component.getY()+component.getHeight())
+                    ){
+                        component.mouseMove(e.getX()-component.getX(),e.getY()-component.getY());
+                    }else {
+                        component.mouseLeave();
                     }
                 }
             }
@@ -75,7 +98,7 @@ public class MainView extends JPanel implements Runnable {
         while (true){
             this.repaint();
             try {
-                Thread.sleep(50);
+                Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -91,27 +114,5 @@ public class MainView extends JPanel implements Runnable {
     }
 
 
-    /**
-     * 判断点是否在某个矩形内
-     * @param x 点的x坐标
-     * @param y 点的y坐标
-     * @param x1 矩形左上x
-     * @param y1 矩形左上y
-     * @param x2 矩形右下x
-     * @param y2 矩形右下y
-     * @return 如果点在矩形内则返回true,不在则返回false
-     */
-    boolean pointInRectangle(int x,int y,int x1,int y1,int x2,int y2){
-        if (x2 < x1) {
-            int tmp = x1;
-            x1 = x2;
-            x2 = tmp;
-        }
-        if (y2 < y1){
-            int tmp = y1;
-            y1 = y2;
-            y2 = tmp;
-        }
-        return x > x1 && x < x2 && y > y1 && y < y2;
-    }
+
 }

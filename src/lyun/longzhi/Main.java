@@ -25,14 +25,15 @@ public class Main {
      * 初始化主视图方法
      */
     static void initMainView(){
-        Thread mainViewThread = new Thread(mainView);
+        //请不要修改属性设置的顺序以及线程创建和new的顺寻,不然会有奇葩的bug
         mainFrame.setSize(LoadConfigure.getScreenWidth()*2/3, LoadConfigure.getScreenHeight()*2/3);
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setResizable(false);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setVisible(true);
         mainView = new MainView();
-        mainFrame.add(mainView);
+        Thread mainViewThread = new Thread(mainView);
         mainViewThread.start();
+        mainFrame.add(mainView);
     }
 }

@@ -11,9 +11,11 @@ public class FileListColumn implements Component{
     private int y;
     private int width;
     private int height;
-    private int maxShow;
-    private int borderWidth = 1;
-    private int roller = 0;
+    private int maxShow;//最大显示数量
+    private int borderWidth = 1;//边框宽度
+    private int roller = 0;//滚轮
+    private int choose = -1;//所选择的文件行
+    private int mouseIn = -1;
 
     private String path;
 
@@ -105,17 +107,32 @@ public class FileListColumn implements Component{
     public void draw(Graphics g) {
         g.setColor(backgroundColor);
         g.fillRect(this.x,this.y,this.width,this.height);
+
+
+
+
         Graphics2D g2d = (Graphics2D)g;
-        g2d.setColor(Color.white);
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);//增加抗锯齿
+
+        //绘制被选择的行
+        g2d.setColor(new Color(119,119,119));
+        if (this.choose > -1)g2d.fillRoundRect(this.x + 10,this.y + 30+30*choose-20,this.width-20,30,3,3);
+
+        //绘制鼠标经过
+        g2d.setColor(new Color(51,51,51));
+        if (this.mouseIn > -1 && this.mouseIn != this.choose)g2d.fillRoundRect(this.x + 10,this.y + 30+30*mouseIn-20,this.width-20,30,3,3);
+
+        g2d.setColor(Color.white);
         for (int i = roller; i < Math.min(roller + maxShow, files.size()); i++) {
             g2d.drawString(files.get(i).getName(),this.x+20,this.y+30+i*30);
         }
     }
 
     @Override
-    public void mouseClick(int mouseX,int mouseY) {
-        System.out.println("FileListColumn 被点击");
+    public void mouseClick(int x,int y) {
+        if (x > 10 && x < this.width-20 && y > 10 && y < this.height - 10){
+            choose = (y-10)/30;
+        }
     }
 
     @Override
@@ -125,7 +142,14 @@ public class FileListColumn implements Component{
 
     @Override
     public void mouseLeave() {
+        this.mouseIn = -1;
+    }
 
+    @Override
+    public void mouseMove(int x, int y) {
+        if (x > 10 && x < this.width-20 && y > 10 && y < this.height - 10){
+            mouseIn = (y-10)/30;
+        }
     }
 
     @Override

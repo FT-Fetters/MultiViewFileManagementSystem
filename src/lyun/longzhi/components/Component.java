@@ -93,6 +93,11 @@ public interface Component {
     void mouseLeave();
 
     /**
+     * 鼠标移动事件
+     */
+    void mouseMove(int x,int y);
+
+    /**
      * 鼠标双击事件
      */
     void mouseDoubleClick();
