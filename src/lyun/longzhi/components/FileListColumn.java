@@ -1,5 +1,7 @@
 package lyun.longzhi.components;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ public class FileListColumn implements Component{
     private boolean background = true;
 
     private List<File> files = new ArrayList<>();
+    private List<Image> filesIcon = new ArrayList<>();
 
     public FileListColumn(String path, int x, int y,int maxShow){
         this.path = path;
@@ -124,7 +127,11 @@ public class FileListColumn implements Component{
 
         g2d.setColor(Color.white);
         for (int i = roller; i < Math.min(roller + maxShow, files.size()); i++) {
-            g2d.drawString(files.get(i).getName(),this.x+20,this.y+30+i*30);
+            g2d.drawString(files.get(i).getName(),this.x+40,this.y+30+i*30);
+
+            //绘制图标
+            g2d.drawImage(filesIcon.get(i),this.x+20,this.y+15+i*30,null);
+
         }
     }
 
@@ -167,14 +174,39 @@ public class FileListColumn implements Component{
 
     }
 
+    /**
+     * 设定索要显示的文件的目录
+     * @param path 目录
+     */
     public void setPath(String path){
         this.path = path;
-        File file = new File(path);
-        files.clear();
-        if (file.isDirectory()){
-            File[] readFiles = file.listFiles();
-            if (readFiles != null)
-                files.addAll(Arrays.asList(readFiles));
+        new Thread(() -> {//此段应当用一个新的线程进行加载,否则会出现堵塞现象导致无法paint()
+            File file = new File(path);
+            files.clear();
+            filesIcon.clear();
+            if (file.isDirectory()){
+                File[] readFiles = file.listFiles();
+                if (readFiles != null) {
+                    files.addAll(Arrays.asList(readFiles));
+                    for (File readFile : readFiles) {
+                        ImageIcon imageIcon = (ImageIcon) getSmallIcon(readFile);
+                        filesIcon.add(imageIcon.getImage());
+                    }
+                }
+            }
+        }).start();
+    }
+
+    /**
+     * 获取小图标
+     * @param f 要获取的文件
+     * @return 图标
+     */
+    private Icon getSmallIcon(File f) {
+        if (f != null && f.exists()) {
+            FileSystemView fsv = FileSystemView.getFileSystemView();
+            return fsv.getSystemIcon(f);
         }
+        return null;
     }
 }

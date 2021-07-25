@@ -20,7 +20,8 @@ import java.util.List;
  */
 public class MainView extends JPanel implements Runnable {
 
-    private List<Component> componentList = new ArrayList<>();
+    //用于存放控件列表
+    private final List<Component> componentList = new ArrayList<>();
 
 
     /**
@@ -41,7 +42,7 @@ public class MainView extends JPanel implements Runnable {
         textLabel.setTextFont(font,new Color(170,170,170));
         componentList.add(textLabel);
 
-        FileListColumn fileListColumn = new FileListColumn("D:\\",25,75,Main.mainFrame.getWidth() -65,320,10);
+        FileListColumn fileListColumn = new FileListColumn("D:\\xz",25,75,Main.mainFrame.getWidth() -65,320,10);
         componentList.add(fileListColumn);
 
     }
@@ -98,7 +99,7 @@ public class MainView extends JPanel implements Runnable {
         while (true){
             this.repaint();
             try {
-                Thread.sleep(10);
+                Thread.sleep(10);//设置刷新延迟,防止cpu占用过高
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
