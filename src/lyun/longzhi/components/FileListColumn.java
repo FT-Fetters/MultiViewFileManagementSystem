@@ -119,26 +119,31 @@ public class FileListColumn implements Component{
 
         //绘制被选择的行
         g2d.setColor(new Color(119,119,119));
-        if (this.choose > -1)g2d.fillRoundRect(this.x + 10,this.y + 30+30*choose-20,this.width-20,30,3,3);
+        if (choose != -1  && choose >= roller && choose<roller+maxShow)
+            g2d.fillRoundRect(this.x + 10,this.y + 30+30*(choose-roller)-20,this.width-20,30,3,3);
 
         //绘制鼠标经过
         g2d.setColor(new Color(51,51,51));
-        if (this.mouseIn > -1 && this.mouseIn != this.choose)g2d.fillRoundRect(this.x + 10,this.y + 30+30*mouseIn-20,this.width-20,30,3,3);
+        if (this.mouseIn > -1 && this.mouseIn != (choose-roller))g2d.fillRoundRect(this.x + 10,this.y + 30+30*mouseIn-20,this.width-20,30,3,3);
 
         g2d.setColor(Color.white);
         for (int i = roller; i < Math.min(roller + maxShow, files.size()); i++) {
-            g2d.drawString(files.get(i).getName(),this.x+40,this.y+30+i*30);
+            //绘制文件名
+            g2d.drawString(files.get(i).getName(),this.x+40,this.y+30+(i-roller)*30);
 
             //绘制图标
-            g2d.drawImage(filesIcon.get(i),this.x+20,this.y+15+i*30,null);
-
+            g2d.drawImage(filesIcon.get(i),this.x+20,this.y+15+(i-roller)*30,null);
         }
+
+        //绘制滚动条
+        g.setColor(new Color(77,77,77));
+        g.fillRect(this.x+10+this.width-20,this.y+roller*this.height/files.size(),10,this.height*maxShow/files.size());
     }
 
     @Override
     public void mouseClick(int x,int y) {
         if (x > 10 && x < this.width-20 && y > 10 && y < this.height - 10){
-            choose = (y-10)/30;
+            choose = (y-10)/30 + roller;
         }
     }
 
@@ -172,6 +177,18 @@ public class FileListColumn implements Component{
     @Override
     public void mouseRelease() {
 
+    }
+
+    @Override
+    public void mouseWheelMoved(int wheel) {
+        //模拟鼠标滚滚动
+        if (wheel == 1){
+            if (roller < files.size() - maxShow){
+                roller++;
+            }
+        }else if (wheel == -1){
+            if (roller > 0)roller--;
+        }
     }
 
     /**

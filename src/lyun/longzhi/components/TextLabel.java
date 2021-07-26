@@ -156,6 +156,11 @@ public class TextLabel implements Component{
 
     }
 
+    @Override
+    public void mouseWheelMoved(int wheel) {
+
+    }
+
     /**
      * 设置文本的字体格式
      * @param font 字体格式

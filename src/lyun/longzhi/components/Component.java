@@ -1,6 +1,7 @@
 package lyun.longzhi.components;
 
 import java.awt.*;
+import java.awt.event.MouseWheelEvent;
 
 public interface Component {
 
@@ -112,5 +113,10 @@ public interface Component {
      */
     void mouseRelease();
 
+    /**
+     * 鼠标滚轮滑动事件
+     * @param wheel 1往上-1往下
+     */
+    void mouseWheelMoved(int wheel);
 
 }

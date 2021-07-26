@@ -128,4 +128,9 @@ public class Button implements Component{
     public void mouseRelease() {
 
     }
+
+    @Override
+    public void mouseWheelMoved(int wheel) {
+
+    }
 }

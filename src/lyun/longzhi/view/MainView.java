@@ -8,9 +8,7 @@ import lyun.longzhi.utils.RectangleOperation;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +40,7 @@ public class MainView extends JPanel implements Runnable {
         textLabel.setTextFont(font,new Color(170,170,170));
         componentList.add(textLabel);
 
-        FileListColumn fileListColumn = new FileListColumn("D:\\xz",25,75,Main.mainFrame.getWidth() -65,320,10);
+        FileListColumn fileListColumn = new FileListColumn("C:\\Windows",25,75,Main.mainFrame.getWidth() -65,320,10);
         componentList.add(fileListColumn);
 
     }
@@ -87,6 +85,21 @@ public class MainView extends JPanel implements Runnable {
                     }else {
                         component.mouseLeave();
                     }
+                }
+            }
+        });
+
+        this.addMouseWheelListener(e -> {
+            for (Component component : componentList) {
+                if (RectangleOperation.pointInRectangle(
+                        e.getX(),
+                        e.getY(),
+                        component.getX(),
+                        component.getY(),
+                        component.getX()+component.getWidth(),
+                        component.getY()+component.getHeight())
+                ){
+                    component.mouseWheelMoved(e.getWheelRotation());
                 }
             }
         });
