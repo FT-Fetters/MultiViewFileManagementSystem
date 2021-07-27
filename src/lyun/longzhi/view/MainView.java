@@ -3,6 +3,7 @@ package lyun.longzhi.view;
 import lyun.longzhi.Main;
 import lyun.longzhi.components.Component;
 import lyun.longzhi.components.FileListColumn;
+import lyun.longzhi.components.PathSelector;
 import lyun.longzhi.components.TextLabel;
 import lyun.longzhi.utils.RectangleOperation;
 
@@ -34,7 +35,7 @@ public class MainView extends JPanel implements Runnable {
     public void addComponents(){
         this.setBackground(new Color(25,25,25));
 
-        TextLabel textLabel = new TextLabel("C:/", Main.mainFrame.getWidth() -65,35,25,25);
+        TextLabel textLabel = new TextLabel("C:/", Main.mainFrame.getWidth() -65-144,35,25,25);
         textLabel.setBorder(new Color(83,83,83),1);
         Font font = new Font("微软雅黑",Font.PLAIN,15);
         textLabel.setTextFont(font,new Color(170,170,170));
@@ -42,6 +43,11 @@ public class MainView extends JPanel implements Runnable {
 
         FileListColumn fileListColumn = new FileListColumn("C:\\Windows",25,75,Main.mainFrame.getWidth() -65,320,10);
         componentList.add(fileListColumn);
+
+        PathSelector selector = new PathSelector();
+        selector.setX(25 + Main.mainFrame.getWidth() -65 - 144+10);
+        selector.setY(25);
+        componentList.add(selector);
 
     }
 
