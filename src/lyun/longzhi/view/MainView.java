@@ -35,7 +35,7 @@ public class MainView extends JPanel implements Runnable {
     public void addComponents(){
         this.setBackground(new Color(25,25,25));
 
-        TextLabel textLabel = new TextLabel("C:/", Main.mainFrame.getWidth() -65-144,35,25,25);
+        TextLabel textLabel = new TextLabel("C:/", Main.mainFrame.getWidth() -65-165,35,25,25);
         textLabel.setBorder(new Color(83,83,83),1);
         Font font = new Font("微软雅黑",Font.PLAIN,15);
         textLabel.setTextFont(font,new Color(170,170,170));
@@ -45,7 +45,7 @@ public class MainView extends JPanel implements Runnable {
         componentList.add(fileListColumn);
 
         PathSelector selector = new PathSelector();
-        selector.setX(25 + Main.mainFrame.getWidth() -65 - 144+10);
+        selector.setX(25 + Main.mainFrame.getWidth() -65 - 165+10);
         selector.setY(25);
         componentList.add(selector);
 
@@ -71,7 +71,30 @@ public class MainView extends JPanel implements Runnable {
                 }
             }
 
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                for (Component component : componentList) {
+                    if (RectangleOperation.pointInRectangle(
+                            e.getX(),
+                            e.getY(),
+                            component.getX(),
+                            component.getY(),
+                            component.getX()+component.getWidth(),
+                            component.getY()+component.getHeight())
+                    ){
+                        component.mousePress(e.getX()-component.getX(),e.getY()-component.getY());
+                    }
+                }
+            }
 
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                for (Component component : componentList) {
+                        component.mouseRelease();
+                }
+            }
         });
 
         this.addMouseMotionListener(new MouseMotionAdapter() {

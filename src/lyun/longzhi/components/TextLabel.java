@@ -147,7 +147,7 @@ public class TextLabel implements Component{
     }
 
     @Override
-    public void mousePress() {
+    public void mousePress(int x,int y) {
 
     }
 

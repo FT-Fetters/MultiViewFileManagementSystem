@@ -106,7 +106,7 @@ public interface Component {
     /**
      * 鼠标按下事件
      */
-    void mousePress();
+    void mousePress(int x,int y);
 
     /**
      * 鼠标释放事件
