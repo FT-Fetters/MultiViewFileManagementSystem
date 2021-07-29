@@ -2,17 +2,37 @@ package lyun.longzhi.components;
 
 import lyun.longzhi.utils.RectangleOperation;
 
+import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.util.Stack;
 
 public class PathSelector implements Component{
     private String path;
+
+    private Stack<String> prePaths = new Stack<>();
+    private Stack<String> sufPaths = new Stack<>();
 
     private int x,y;
     private int mouseEnter = -1;
     private int mouseClick;
 
+    private FileListColumn fileListColumn;
 
+    private TextLabel textLabel;
 
+    private JFileChooser jFileChooser;
+
+    public PathSelector(String path,int x,int y){
+        this.path = path;
+        this.x = x;
+        this.y = y;
+        new Thread(() -> {
+            jFileChooser = new JFileChooser();
+            jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        }).start();
+
+    }
 
     /**
      * 固定宽度高度无法修改
@@ -179,14 +199,45 @@ public class PathSelector implements Component{
     }
 
     private void backOff(){
-
+        if (!prePaths.isEmpty()){
+            path = prePaths.pop();
+            if (textLabel != null)textLabel.text = path;
+            if (fileListColumn != null)fileListColumn.setPath(path);
+        }
     }
 
     private void forward(){
-
+        if (!sufPaths.isEmpty()){
+            path = prePaths.pop();
+            if (textLabel != null)textLabel.text = path;
+            if (fileListColumn != null)fileListColumn.setPath(path);
+        }
     }
 
     private void selectPath(){
+        File tmp;
+        int flag = -1;
+        try {
+            flag = jFileChooser.showOpenDialog(null);
+        } catch (HeadlessException e) {
+            e.printStackTrace();
+        }
+        if (flag == JFileChooser.APPROVE_OPTION){
+            tmp = jFileChooser.getSelectedFile();
+            path = tmp.getPath();
+            if (textLabel != null)textLabel.text = path;
+            if (fileListColumn != null)fileListColumn.setPath(path);
+        }
+    }
 
+    public void enterNewPath(String path){
+        prePaths.push(this.path);
+        sufPaths.clear();
+        this.path = path;
+    }
+
+    public void connect(FileListColumn fileListColumn,TextLabel textLabel){
+        this.fileListColumn = fileListColumn;
+        this.textLabel = textLabel;
     }
 }

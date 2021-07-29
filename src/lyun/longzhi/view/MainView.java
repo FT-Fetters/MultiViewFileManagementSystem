@@ -22,6 +22,8 @@ public class MainView extends JPanel implements Runnable {
     //用于存放控件列表
     private final List<Component> componentList = new ArrayList<>();
 
+    private String path = "C:\\Windows";
+
 
     /**
      * 视图类创建的初始化
@@ -35,18 +37,20 @@ public class MainView extends JPanel implements Runnable {
     public void addComponents(){
         this.setBackground(new Color(25,25,25));
 
-        TextLabel textLabel = new TextLabel("C:/", Main.mainFrame.getWidth() -65-165,35,25,25);
+        TextLabel textLabel = new TextLabel(path, Main.mainFrame.getWidth() -65-165,35,25,25);
         textLabel.setBorder(new Color(83,83,83),1);
         Font font = new Font("微软雅黑",Font.PLAIN,15);
         textLabel.setTextFont(font,new Color(170,170,170));
+
+        FileListColumn fileListColumn = new FileListColumn(path,25,75,Main.mainFrame.getWidth() -65,320,10);
+
+        PathSelector selector = new PathSelector(path,25 + Main.mainFrame.getWidth() -65 - 165+10,25);
+
+        fileListColumn.connect(textLabel,selector);
+        selector.connect(fileListColumn,textLabel);
+
         componentList.add(textLabel);
-
-        FileListColumn fileListColumn = new FileListColumn("C:\\Windows",25,75,Main.mainFrame.getWidth() -65,320,10);
         componentList.add(fileListColumn);
-
-        PathSelector selector = new PathSelector();
-        selector.setX(25 + Main.mainFrame.getWidth() -65 - 165+10);
-        selector.setY(25);
         componentList.add(selector);
 
     }
@@ -95,6 +99,7 @@ public class MainView extends JPanel implements Runnable {
                         component.mouseRelease();
                 }
             }
+
         });
 
         this.addMouseMotionListener(new MouseMotionAdapter() {

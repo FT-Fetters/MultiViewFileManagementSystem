@@ -26,9 +26,14 @@ public class FileListColumn implements Component{
 
     private boolean border = false;
     private boolean background = true;
+    private boolean loading = true;
 
     private List<File> files = new ArrayList<>();
     private List<Image> filesIcon = new ArrayList<>();
+
+    private TextLabel textLabel;
+
+    private PathSelector pathSelector;
 
     public FileListColumn(String path, int x, int y,int maxShow){
         this.path = path;
@@ -112,32 +117,32 @@ public class FileListColumn implements Component{
         g.fillRect(this.x,this.y,this.width,this.height);
 
 
-
-
         Graphics2D g2d = (Graphics2D)g;
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);//增加抗锯齿
+        if (files.size() == 0){g2d.setColor(Color.white);g2d.drawString("此文件夹为空",this.x + this.width/2 - 30,this.y + 20);return;}
 
         //绘制被选择的行
         g2d.setColor(new Color(119,119,119));
-        if (choose != -1  && choose >= roller && choose<roller+maxShow)
+        if (choose != -1  && choose >= roller && choose<roller+maxShow && ((files.size() - maxShow) >= 0 || files.size() > choose))
             g2d.fillRoundRect(this.x + 10,this.y + 30+30*(choose-roller)-20,this.width-20,30,3,3);
 
         //绘制鼠标经过
         g2d.setColor(new Color(51,51,51));
-        if (this.mouseIn > -1 && this.mouseIn != (choose-roller))g2d.fillRoundRect(this.x + 10,this.y + 30+30*mouseIn-20,this.width-20,30,3,3);
+        if (this.mouseIn > -1 && this.mouseIn != (choose-roller) && ((files.size() - maxShow) >= 0 || files.size() > mouseIn))
+            g2d.fillRoundRect(this.x + 10,this.y + 30+30*mouseIn-20,this.width-20,30,3,3);
 
         g2d.setColor(Color.white);
         for (int i = roller; i < Math.min(roller + maxShow, files.size()); i++) {
+            if (loading)continue;
             //绘制文件名
             g2d.drawString(files.get(i).getName(),this.x+40,this.y+30+(i-roller)*30);
 
             //绘制图标
             g2d.drawImage(filesIcon.get(i),this.x+20,this.y+15+(i-roller)*30,null);
         }
-
         //绘制滚动条
         g.setColor(new Color(77,77,77));
-        g.fillRect(this.x+10+this.width-20,this.y+roller*this.height/files.size(),10,this.height*maxShow/files.size());
+        if (files.size() > maxShow)g.fillRect(this.x+10+this.width-20,this.y+roller*this.height/files.size(),10,this.height*maxShow/files.size());
     }
 
     @Override
@@ -166,7 +171,19 @@ public class FileListColumn implements Component{
 
     @Override
     public void mouseDoubleClick() {
-
+        if (x > 10 && x < this.width-20 && y > 10 && y < this.height - 10){
+            int tmp = (y-10)/30 + roller;
+            if (files.get(tmp).isDirectory()){
+                String newPath = files.get(tmp).getPath();
+                if (pathSelector != null){
+                    pathSelector.enterNewPath(newPath);
+                }
+                if (textLabel != null){
+                    textLabel.text = newPath;
+                }
+                setPath(newPath);
+            }
+        }
     }
 
     @Override
@@ -196,6 +213,7 @@ public class FileListColumn implements Component{
      * @param path 目录
      */
     public void setPath(String path){
+        loading = true;
         this.path = path;
         new Thread(() -> {//此段应当用一个新的线程进行加载,否则会出现堵塞现象导致无法paint()
             File file = new File(path);
@@ -211,6 +229,7 @@ public class FileListColumn implements Component{
                     }
                 }
             }
+            loading = false;
         }).start();
     }
 
@@ -225,5 +244,10 @@ public class FileListColumn implements Component{
             return fsv.getSystemIcon(f);
         }
         return null;
+    }
+
+    public void connect(TextLabel textLabel,PathSelector pathSelector){
+        this.textLabel = textLabel;
+        this.pathSelector = pathSelector;
     }
 }
