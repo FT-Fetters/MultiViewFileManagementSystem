@@ -101,7 +101,7 @@ public interface Component {
     /**
      * 鼠标双击事件
      */
-    void mouseDoubleClick();
+    void mouseDoubleClick(int x,int y);
 
     /**
      * 鼠标按下事件

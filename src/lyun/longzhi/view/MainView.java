@@ -22,7 +22,7 @@ public class MainView extends JPanel implements Runnable {
     //用于存放控件列表
     private final List<Component> componentList = new ArrayList<>();
 
-    private String path = "C:\\Windows";
+    private String path = "D:\\";
 
 
     /**
@@ -61,18 +61,34 @@ public class MainView extends JPanel implements Runnable {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                for (Component component : componentList) {
-                    if (RectangleOperation.pointInRectangle(
-                            e.getX(),
-                            e.getY(),
-                            component.getX(),
-                            component.getY(),
-                            component.getX()+component.getWidth(),
-                            component.getY()+component.getHeight())
-                    ){
-                        component.mouseClick(e.getX()-component.getX(),e.getY()-component.getY());
+                if (e.getClickCount() == 2 && SwingUtilities.isLeftMouseButton(e)){
+                    for (Component component : componentList) {
+                        if (RectangleOperation.pointInRectangle(
+                                e.getX(),
+                                e.getY(),
+                                component.getX(),
+                                component.getY(),
+                                component.getX()+component.getWidth(),
+                                component.getY()+component.getHeight())
+                        ) {
+                            component.mouseDoubleClick(e.getX()-component.getX(),e.getY()-component.getY());
+                        }
+                    }
+                }else if (e.getClickCount() == 1 && SwingUtilities.isLeftMouseButton(e)){
+                    for (Component component : componentList) {
+                        if (RectangleOperation.pointInRectangle(
+                                e.getX(),
+                                e.getY(),
+                                component.getX(),
+                                component.getY(),
+                                component.getX()+component.getWidth(),
+                                component.getY()+component.getHeight())
+                        ){
+                            component.mouseClick(e.getX()-component.getX(),e.getY()-component.getY());
+                        }
                     }
                 }
+
             }
 
             @Override

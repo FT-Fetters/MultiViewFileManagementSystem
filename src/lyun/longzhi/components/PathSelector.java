@@ -113,8 +113,8 @@ public class PathSelector implements Component{
         if (this.mouseClick != -1)graphics2D.setColor(new Color(40,40,40));
         else graphics2D.setColor(new Color(45,45,45));
         switch (mouseEnter){
-            case 0:graphics2D.fillRoundRect(this.x,this.y,45,35,5,5);break;
-            case 1:graphics2D.fillRoundRect(this.x + 40 + 10,this.y,45,35,5,5);break;
+            case 0:if (prePaths.isEmpty())break;graphics2D.fillRoundRect(this.x,this.y,45,35,5,5);break;
+            case 1:if (sufPaths.isEmpty())break;graphics2D.fillRoundRect(this.x + 40 + 10,this.y,45,35,5,5);break;
             case 2:graphics2D.fillRoundRect(this.x + 35 + 15 + 35 + 20 + 10,this.y,40,35,5,5);break;
         }
 
@@ -123,13 +123,13 @@ public class PathSelector implements Component{
         //艰难的画出的两个箭头,总算调好看了,花了快半个小时
         //箭头一
         graphics2D.setStroke(new BasicStroke(2f));
-        if (mouseClick == 0)graphics2D.setColor(new Color(200,200,200));
+        if (mouseClick == 0 || prePaths.isEmpty())graphics2D.setColor(new Color(150,150,150));
         else graphics2D.setColor(Color.white);
         graphics2D.drawLine(this.x + 10,this.y+35/2,this.x+20 -2,this.y+5 + 4);
         graphics2D.drawLine(this.x+10,this.y+35/2,this.x+20 -2,this.y+30 - 4);
         graphics2D.drawLine(this.x+10 + 2,this.y+35/2,this.x+35,this.y+35/2);
         //箭头二
-        if (mouseClick == 1)graphics2D.setColor(new Color(200,200,200));
+        if (mouseClick == 1 || sufPaths.isEmpty())graphics2D.setColor(new Color(150,150,150));
         else graphics2D.setColor(Color.white);
         graphics2D.drawLine(this.x+10 + 15 + 35 ,this.y+35/2,this.x+35 + 15 + 35 - 2,this.y+35/2);
         graphics2D.drawLine(this.x + 10 + 15 + 35 + 25,this.y + 35/2,this.x + 10 + 15+35 + 15 + 2,this.y + 5 + 4);
@@ -142,7 +142,6 @@ public class PathSelector implements Component{
         graphics2D.drawLine(this.x + 35 + 15 + 35 + 20,this.y - 5 , this.x + 35 + 15 + 35 + 20,this.y + 35 +5);
 
         //选择地址
-
         if (mouseClick == 2)graphics2D.setColor(new Color(200,200,200));
         else graphics2D.setColor(Color.white);
         graphics2D.fillOval(this.x + 35 + 15 + 35 + 20 + 20,this.y + 35/2 - 2,4,4);
@@ -177,8 +176,8 @@ public class PathSelector implements Component{
     }
 
     @Override
-    public void mouseDoubleClick() {
-
+    public void mouseDoubleClick(int x,int y) {
+        mouseClick(x,y);
     }
 
     @Override
@@ -200,6 +199,7 @@ public class PathSelector implements Component{
 
     private void backOff(){
         if (!prePaths.isEmpty()){
+            sufPaths.push(path);
             path = prePaths.pop();
             if (textLabel != null)textLabel.text = path;
             if (fileListColumn != null)fileListColumn.setPath(path);
@@ -208,7 +208,8 @@ public class PathSelector implements Component{
 
     private void forward(){
         if (!sufPaths.isEmpty()){
-            path = prePaths.pop();
+            prePaths.push(path);
+            path = sufPaths.pop();
             if (textLabel != null)textLabel.text = path;
             if (fileListColumn != null)fileListColumn.setPath(path);
         }
@@ -228,6 +229,8 @@ public class PathSelector implements Component{
             if (textLabel != null)textLabel.text = path;
             if (fileListColumn != null)fileListColumn.setPath(path);
         }
+        this.prePaths.clear();
+        this.sufPaths.clear();
     }
 
     public void enterNewPath(String path){

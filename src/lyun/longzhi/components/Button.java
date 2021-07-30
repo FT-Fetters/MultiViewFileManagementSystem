@@ -115,7 +115,7 @@ public class Button implements Component{
     }
 
     @Override
-    public void mouseDoubleClick() {
+    public void mouseDoubleClick(int x,int y) {
 
     }
 

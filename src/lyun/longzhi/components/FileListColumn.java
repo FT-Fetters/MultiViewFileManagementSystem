@@ -26,7 +26,6 @@ public class FileListColumn implements Component{
 
     private boolean border = false;
     private boolean background = true;
-    private boolean loading = true;
 
     private List<File> files = new ArrayList<>();
     private List<Image> filesIcon = new ArrayList<>();
@@ -133,12 +132,11 @@ public class FileListColumn implements Component{
 
         g2d.setColor(Color.white);
         for (int i = roller; i < Math.min(roller + maxShow, files.size()); i++) {
-            if (loading)continue;
             //绘制文件名
-            g2d.drawString(files.get(i).getName(),this.x+40,this.y+30+(i-roller)*30);
+            if (i < filesIcon.size())g2d.drawString(files.get(i).getName(),this.x+40,this.y+30+(i-roller)*30);
 
             //绘制图标
-            g2d.drawImage(filesIcon.get(i),this.x+20,this.y+15+(i-roller)*30,null);
+            if (i < filesIcon.size())g2d.drawImage(filesIcon.get(i),this.x+20,this.y+15+(i-roller)*30,null);
         }
         //绘制滚动条
         g.setColor(new Color(77,77,77));
@@ -170,9 +168,10 @@ public class FileListColumn implements Component{
     }
 
     @Override
-    public void mouseDoubleClick() {
+    public void mouseDoubleClick(int x,int y) {
         if (x > 10 && x < this.width-20 && y > 10 && y < this.height - 10){
             int tmp = (y-10)/30 + roller;
+            if ((y-10)/30 > files.size() - roller)return;
             if (files.get(tmp).isDirectory()){
                 String newPath = files.get(tmp).getPath();
                 if (pathSelector != null){
@@ -182,6 +181,8 @@ public class FileListColumn implements Component{
                     textLabel.text = newPath;
                 }
                 setPath(newPath);
+                this.choose = -1;
+                this.roller = 0;
             }
         }
     }
@@ -213,7 +214,6 @@ public class FileListColumn implements Component{
      * @param path 目录
      */
     public void setPath(String path){
-        loading = true;
         this.path = path;
         new Thread(() -> {//此段应当用一个新的线程进行加载,否则会出现堵塞现象导致无法paint()
             File file = new File(path);
@@ -229,7 +229,7 @@ public class FileListColumn implements Component{
                     }
                 }
             }
-            loading = false;
+            this.roller = 0;
         }).start();
     }
 

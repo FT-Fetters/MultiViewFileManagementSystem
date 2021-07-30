@@ -142,7 +142,7 @@ public class TextLabel implements Component{
     }
 
     @Override
-    public void mouseDoubleClick() {
+    public void mouseDoubleClick(int x,int y) {
 
     }
 
