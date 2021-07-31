@@ -1,10 +1,9 @@
 package lyun.longzhi.view;
 
 import lyun.longzhi.Main;
+import lyun.longzhi.components.*;
+import lyun.longzhi.components.Button;
 import lyun.longzhi.components.Component;
-import lyun.longzhi.components.FileListColumn;
-import lyun.longzhi.components.PathSelector;
-import lyun.longzhi.components.TextLabel;
 import lyun.longzhi.utils.RectangleOperation;
 
 import javax.swing.*;
@@ -42,9 +41,15 @@ public class MainView extends JPanel implements Runnable {
         Font font = new Font("微软雅黑",Font.PLAIN,15);
         textLabel.setTextFont(font,new Color(170,170,170));
 
-        FileListColumn fileListColumn = new FileListColumn(path,25,75,Main.mainFrame.getWidth() -65,320,10);
+        FileListColumn fileListColumn = new FileListColumn(path,25,155,Main.mainFrame.getWidth() -65,320,10);
 
         PathSelector selector = new PathSelector(path,25 + Main.mainFrame.getWidth() -65 - 165+10,25);
+
+        NavigationBar nav = new NavigationBar(4,25,75,Main.mainFrame.getWidth() -65,60);
+        nav.addContent("文件列表");
+        nav.addContent("分类图表");
+        nav.addContent("时间轴图");
+        nav.addContent("自定义视图");
 
         fileListColumn.connect(textLabel,selector);
         selector.connect(fileListColumn,textLabel);
@@ -52,6 +57,7 @@ public class MainView extends JPanel implements Runnable {
         componentList.add(textLabel);
         componentList.add(fileListColumn);
         componentList.add(selector);
+        componentList.add(nav);
 
     }
 
