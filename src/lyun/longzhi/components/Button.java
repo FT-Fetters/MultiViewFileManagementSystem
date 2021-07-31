@@ -1,8 +1,9 @@
 package lyun.longzhi.components;
 
+import javax.swing.*;
 import java.awt.*;
 
-public class Button implements Component{
+public class Button extends JButton implements Component{
     private int x;
     private int y;
     private int width;
@@ -16,19 +17,31 @@ public class Button implements Component{
     private Color textColor = Color.white;
 
     Button(String text,int width,int height){
+        super(text);
         this.buttonText = text;
         this.width = width;
         this.height = height;
+        setContentAreaFilled(false);// 是否显示外围矩形区域 选否
     }
 
     Button(String text,int width,int height,int x,int y){
+        super(text);
         this.buttonText = text;
         this.width = width;
         this.height = height;
         this.x = x;
         this.y = y;
+        setContentAreaFilled(false);// 是否显示外围矩形区域 选否
     }
 
+    public void paintComponent(Graphics g) {
+        g.setColor(backgroundColor);
+        g.fillRoundRect(0, 0, getSize().width - 1, getSize().height - 1, 15, 15);
+        super.paintComponent(g);
+    }
+    public void paintBorder(Graphics g) {
+        g.drawRoundRect(0, 0, getSize().width - 1, getSize().height - 1, 15, 15);
+    }
 
     @Override
     public void resize(int width, int height) {
