@@ -4,7 +4,7 @@ import java.awt.*;
 
 public interface Component {
 
-
+    void setEnable(boolean enable);
 
     /**
      * 设置组件大小

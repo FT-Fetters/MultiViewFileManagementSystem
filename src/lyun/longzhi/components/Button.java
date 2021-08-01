@@ -23,7 +23,7 @@ public class Button  implements Component{
         this.height = height;
     }
 
-    Button(String text,int width,int height,int x,int y){
+    public Button(String text, int width, int height, int x, int y){
 
         this.buttonText = text;
         this.width = width;
@@ -32,6 +32,11 @@ public class Button  implements Component{
         this.y = y;
     }
 
+
+    @Override
+    public void setEnable(boolean enable) {
+
+    }
 
     @Override
     public void resize(int width, int height) {

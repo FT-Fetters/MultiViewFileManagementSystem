@@ -17,6 +17,8 @@ public class PathSelector implements Component{
     private int mouseEnter = -1;
     private int mouseClick;
 
+    private boolean enable = true;
+
     private FileListColumn fileListColumn;
 
     private TextLabel textLabel;
@@ -32,6 +34,11 @@ public class PathSelector implements Component{
             jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         }).start();
 
+    }
+
+    @Override
+    public void setEnable(boolean enable) {
+        this.enable = enable;
     }
 
     /**
@@ -105,6 +112,7 @@ public class PathSelector implements Component{
 
     @Override
     public void draw(Graphics g) {
+        if (!enable)return;
         Graphics2D graphics2D = (Graphics2D) g;
         //消除画图和文字抗锯齿
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -152,6 +160,7 @@ public class PathSelector implements Component{
 
     @Override
     public void mouseClick(int x, int y) {
+        if (!enable)return;
         if (RectangleOperation.pointInRectangle(x,y,0,0,40,35))backOff();
         else if (RectangleOperation.pointInRectangle(x,y,40 + 5,0, 40 + 5 + 40, 35))forward();
         else if (RectangleOperation.pointInRectangle(x,y,35 + 15 + 35 + 20 + 10,0,35 + 15 + 35 + 20 + 10 + 35,35))selectPath();
@@ -159,17 +168,19 @@ public class PathSelector implements Component{
 
     @Override
     public void mouseEnter() {
-
+        if (!enable)return;if (!enable)return;
     }
 
     @Override
     public void mouseLeave() {
+        if (!enable)return;
         this.mouseEnter = -1;
         this.mouseClick = -1;
     }
 
     @Override
     public void mouseMove(int x, int y) {
+        if (!enable)return;
         if (RectangleOperation.pointInRectangle(x,y,0,0,40,35))this.mouseEnter = 0;
         else if (RectangleOperation.pointInRectangle(x,y,40 + 5,0, 40 + 5 + 40, 35))this.mouseEnter = 1;
         else if (RectangleOperation.pointInRectangle(x,y,35 + 15 + 35 + 20 + 10,0,35 + 15 + 35 + 20 + 10 + 35,35))this.mouseEnter = 2;
@@ -177,11 +188,13 @@ public class PathSelector implements Component{
 
     @Override
     public void mouseDoubleClick(int x,int y) {
+        if (!enable)return;
         mouseClick(x,y);
     }
 
     @Override
     public void mousePress(int x,int y) {
+        if (!enable)return;
         if (RectangleOperation.pointInRectangle(x,y,0,0,40,35))this.mouseClick = 0;
         else if (RectangleOperation.pointInRectangle(x,y,40 + 5,0, 40 + 5 + 40, 35))this.mouseClick = 1;
         else if (RectangleOperation.pointInRectangle(x,y,35 + 15 + 35 + 20 + 10,0,35 + 15 + 35 + 20 + 10 + 35,35))this.mouseClick = 2;
@@ -189,11 +202,13 @@ public class PathSelector implements Component{
 
     @Override
     public void mouseRelease() {
+        if (!enable)return;
         this.mouseClick = -1;
     }
 
     @Override
     public void mouseWheelMoved(int wheel) {
+        if (!enable)return;
 
     }
 

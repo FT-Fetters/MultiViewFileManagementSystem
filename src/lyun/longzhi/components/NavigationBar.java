@@ -12,23 +12,38 @@ public class NavigationBar implements Component {
     private int borderWidth;
     private int capacity;
     private int mouseIn = -1;
-    private int choose = -1;
+    private int choose = 0;
 
     private Color backgroundColor;
     private Color borderColor;
 
     private boolean border = true;
+    private boolean enable = true;
 
     private List<String> contents = new ArrayList<>();
 
+    private Component[][] components;
 
-    public NavigationBar(int capacity, int x, int y, int width, int height) {
+
+    public NavigationBar(int capacity, int x, int y, int width, int height,Component[][] components) {
         this.capacity = capacity;
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         borderColor = new Color(43,43,43);
+        this.components = components;
+        for (int i = 1;i < capacity;i++){
+            if (components[i] != null)
+                for (Component component : components[i]) {
+                    component.setEnable(false);
+                }
+        }
+    }
+
+    @Override
+    public void setEnable(boolean enable) {
+        this.enable = enable;
     }
 
     @Override
@@ -90,6 +105,7 @@ public class NavigationBar implements Component {
 
     @Override
     public void draw(Graphics g) {
+        if (!enable)return;
         Graphics2D g2d = ((Graphics2D) g);
         //增加抗锯齿
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -109,7 +125,7 @@ public class NavigationBar implements Component {
 
         if (border){g2d.setColor(this.borderColor);g2d.setStroke(new BasicStroke(0.8f));g2d.drawLine(0,this.y + height,Integer.MAX_VALUE,this.y+height);}
 
-        if (mouseIn != -1){
+        if (mouseIn != -1 && mouseIn != choose){
             g2d.setColor(new Color(51,51,51));
             g2d.fillRect(
                     this.x + mouseIn * singleContentWidth + singleContentWidth/3,
@@ -117,47 +133,69 @@ public class NavigationBar implements Component {
                     this.height/10);
         }
 
+        if (choose != -1){
+            g2d.setColor(new Color(119,119,119));
+            g2d.fillRect(
+                    this.x + choose * singleContentWidth + singleContentWidth/3,
+                    this.y + this.height - this.height /10,singleContentWidth/3,
+                    this.height/10);
+        }
+
     }
 
     @Override
-    public void mouseClick(int mouseX, int mouseY) {
+    public void mouseClick(int x, int y) {
+        if (!enable)return;
+        int singleContentWidth = width / capacity;
+        if (components[choose] != null){
+            for (Component component : components[choose]) {
+                if (component!= null)component.setEnable(false);
+            }
+        }
+        this.choose = x/singleContentWidth;
+        if (components[choose] != null){
+            for (Component component : components[choose]) {
+                if (component!= null)component.setEnable(true);
+            }
+        }
 
     }
 
     @Override
     public void mouseEnter() {
-
+        if (!enable)return;
     }
 
     @Override
     public void mouseLeave() {
-        this.mouseIn = -1;
+        if (!enable)return;this.mouseIn = -1;
     }
 
     @Override
     public void mouseMove(int x, int y) {
+        if (!enable)return;
         int singleContentWidth = width / capacity;
         this.mouseIn = x/singleContentWidth;
     }
 
     @Override
     public void mouseDoubleClick(int x, int y) {
-
+        if (!enable)return;
     }
 
     @Override
     public void mousePress(int x, int y) {
-
+        if (!enable)return;
     }
 
     @Override
     public void mouseRelease() {
-
+        if (!enable)return;
     }
 
     @Override
     public void mouseWheelMoved(int wheel) {
-
+        if (!enable)return;
     }
 
 
@@ -172,6 +210,13 @@ public class NavigationBar implements Component {
             contents.add(content);
             return true;
         } else return false;
+    }
+
+    public boolean setContent(int i,Component[] component){
+        if (i < capacity -1){
+            components[i] = component;
+            return true;
+        }else return false;
     }
 
 

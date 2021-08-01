@@ -26,6 +26,7 @@ public class FileListColumn implements Component{
 
     private boolean border = false;
     private boolean background = true;
+    private boolean enable = true;
 
     private List<File> files = new ArrayList<>();
     private List<Image> filesIcon = new ArrayList<>();
@@ -52,6 +53,11 @@ public class FileListColumn implements Component{
         this.setPath(this.path);
     }
 
+
+    @Override
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
 
     @Override
     public void resize(int width, int height) {
@@ -112,11 +118,14 @@ public class FileListColumn implements Component{
 
     @Override
     public void draw(Graphics g) {
+        if (!enable)return;
         g.setColor(backgroundColor);
         g.fillRect(this.x,this.y,this.width,this.height);
 
 
         Graphics2D g2d = (Graphics2D)g;
+        Font font = new Font("微软雅黑",Font.PLAIN,15);
+        g2d.setFont(font);
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);//增加抗锯齿
         if (files.size() == 0){g2d.setColor(Color.white);g2d.drawString("此文件夹为空",this.x + this.width/2 - 30,this.y + 20);return;}
 
@@ -145,6 +154,7 @@ public class FileListColumn implements Component{
 
     @Override
     public void mouseClick(int x,int y) {
+        if (!enable)return;
         if (x > 10 && x < this.width-20 && y > 10 && y < this.height - 10){
             choose = (y-10)/30 + roller;
         }
@@ -152,16 +162,17 @@ public class FileListColumn implements Component{
 
     @Override
     public void mouseEnter() {
-
+        if (!enable)return;
     }
 
     @Override
     public void mouseLeave() {
-        this.mouseIn = -1;
+        if (!enable)return;this.mouseIn = -1;
     }
 
     @Override
     public void mouseMove(int x, int y) {
+        if (!enable)return;
         if (x > 10 && x < this.width-20 && y > 10 && y < this.height - 10){
             mouseIn = (y-10)/30;
         }
@@ -169,6 +180,7 @@ public class FileListColumn implements Component{
 
     @Override
     public void mouseDoubleClick(int x,int y) {
+        if (!enable)return;
         if (x > 10 && x < this.width-20 && y > 10 && y < this.height - 10){
             int tmp = (y-10)/30 + roller;
             if ((y-10)/30 > files.size() - roller)return;
@@ -189,16 +201,17 @@ public class FileListColumn implements Component{
 
     @Override
     public void mousePress(int x, int y) {
-
+        if (!enable)return;
     }
 
     @Override
     public void mouseRelease() {
-
+        if (!enable)return;
     }
 
     @Override
     public void mouseWheelMoved(int wheel) {
+        if (!enable)return;
         //模拟鼠标滚滚动
         if (wheel == 1){
             if (roller < files.size() - maxShow){

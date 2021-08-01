@@ -15,6 +15,7 @@ public class TextLabel implements Component{
 
     private boolean background = false;
     private boolean border = false;
+    private boolean enable = true;
 
     private Color backgroundColor;
     private Color borderColor;
@@ -38,6 +39,11 @@ public class TextLabel implements Component{
         this.height = height;
         this.x = x;
         this.y = y;
+    }
+
+    @Override
+    public void setEnable(boolean enable) {
+        this.enable = enable;
     }
 
     @Override
@@ -101,6 +107,7 @@ public class TextLabel implements Component{
 
     @Override
     public void draw(Graphics g) {
+        if (!enable)return;
         //绘制背景
         if (background){
             g.setColor(backgroundColor);
@@ -123,42 +130,44 @@ public class TextLabel implements Component{
 
     @Override
     public void mouseClick(int mouseX,int mouseY) {
+        if (!enable)return;
         System.out.println("textLabel被点击");
     }
 
     @Override
     public void mouseEnter() {
+        if (!enable)return;
 
     }
 
     @Override
     public void mouseLeave() {
-
+        if (!enable)return;
     }
 
     @Override
     public void mouseMove(int x, int y) {
-
+        if (!enable)return;
     }
 
     @Override
     public void mouseDoubleClick(int x,int y) {
-
+        if (!enable)return;
     }
 
     @Override
     public void mousePress(int x,int y) {
-
+        if (!enable)return;
     }
 
     @Override
     public void mouseRelease() {
-
+        if (!enable)return;
     }
 
     @Override
     public void mouseWheelMoved(int wheel) {
-
+        if (!enable)return;
     }
 
     /**
