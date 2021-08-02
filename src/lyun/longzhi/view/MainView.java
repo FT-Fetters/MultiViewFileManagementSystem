@@ -36,16 +36,23 @@ public class MainView extends JPanel implements Runnable {
     public void addComponents(){
         this.setBackground(new Color(25,25,25));
 
+        //TextLable
         TextLabel textLabel = new TextLabel(path, Main.mainFrame.getWidth() -65-165,35,25,95);
         textLabel.setBorder(new Color(83,83,83),1);
         Font font = new Font("微软雅黑",Font.PLAIN,15);
         textLabel.setTextFont(font,new Color(170,170,170));
 
-        FileListColumn fileListColumn = new FileListColumn(path,25,155,Main.mainFrame.getWidth() -65,320,10);
+        //FileListColumn
+        FileListColumn fileListColumn = new FileListColumn(path,25,155,Main.mainFrame.getWidth() -65,500,16);
 
+        //PathSelector
         PathSelector selector = new PathSelector(path,25 + Main.mainFrame.getWidth() -65 - 165+10,95);
 
-        Component[][] components = {{fileListColumn,selector,textLabel},null,null,null};
+        //TypeClassifier
+        TypeClassifier typeClassifier = new TypeClassifier(25,95,Main.mainFrame.getWidth() -65,550,"");
+
+        //NavigationBar
+        Component[][] components = {{fileListColumn,selector,textLabel},{typeClassifier},null,null};
         NavigationBar nav = new NavigationBar(4,25,15,Main.mainFrame.getWidth() -65,60,components);
         nav.addContent("文件列表");
         nav.addContent("分类图表");
@@ -59,6 +66,7 @@ public class MainView extends JPanel implements Runnable {
         componentList.add(textLabel);
         componentList.add(selector);
         componentList.add(nav);
+        componentList.add(typeClassifier);
 
     }
 

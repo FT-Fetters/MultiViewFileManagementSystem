@@ -80,7 +80,7 @@ public interface Component {
     /**
      * 鼠标点击事件
      */
-    void mouseClick(int mouseX,int mouseY);
+    void mouseClick(int x,int y);
 
     /**
      * 鼠标进入事件
