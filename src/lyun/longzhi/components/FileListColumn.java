@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -259,7 +260,11 @@ public class FileListColumn implements Component{
         return null;
     }
 
-    public void connect(TextLabel textLabel,PathSelector pathSelector){
+
+
+
+
+        public void connect(TextLabel textLabel,PathSelector pathSelector){
         this.textLabel = textLabel;
         this.pathSelector = pathSelector;
     }

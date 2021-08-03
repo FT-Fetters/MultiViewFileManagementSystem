@@ -50,6 +50,7 @@ public class MainView extends JPanel implements Runnable {
 
         //TypeClassifier
         TypeClassifier typeClassifier = new TypeClassifier(25,95,Main.mainFrame.getWidth() -65,550,"");
+        typeClassifier.setPath("C:\\Users\\15750\\Pictures\\Saved Pictures");
 
         //NavigationBar
         Component[][] components = {{fileListColumn,selector,textLabel},{typeClassifier},null,null};

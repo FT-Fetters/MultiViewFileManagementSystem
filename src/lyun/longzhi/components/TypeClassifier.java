@@ -1,10 +1,13 @@
 package lyun.longzhi.components;
 
 import lyun.longzhi.Main;
+import lyun.longzhi.utils.DetermineFileType;
 import lyun.longzhi.utils.RectangleOperation;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +23,13 @@ public class TypeClassifier implements Component{
     private List<File> otherFiles = new ArrayList<>();
 
     private final Color OTHER_BACKGROUND = new Color(32,32,32);
-    private final Color VIDEO_BACKGROUND= new Color(40,40,40);
-    private final Color IMAGE_BACKGROUND = new Color(48,48,48);
+    private final Color VIDEO_BACKGROUND= new Color(42,42,42);
+    private final Color IMAGE_BACKGROUND = new Color(52,52,52);
 
 
+    static final Image IMAGE_ICON = new ImageIcon("src/lyun/longzhi/images/image.png").getImage();
+    static final Image VIDEO_ICON = new ImageIcon("src/lyun/longzhi/images/video.png").getImage();
+    static final Image OTHER_ICON = new ImageIcon("src/lyun/longzhi/images/other.png").getImage();
 
 
     private String path;
@@ -116,24 +122,43 @@ public class TypeClassifier implements Component{
         g2d.fillRect(this.x + this.width - 30 - 80*3 - 25*2,this.y,80,60);
         //draw text
         g2d.setColor(Color.white);
-        Font font = new Font("微软雅黑",Font.BOLD,18);
-        g2d.setFont(font);
+
+        Font plain = new Font("微软雅黑",Font.PLAIN,18);
+        Font bold = new Font("微软雅黑",Font.BOLD,18);
+        if (checked == 0)g2d.setFont(bold);
+        else g2d.setFont(plain);
         g2d.drawString("图片",this.x + this.width - 30 - 80*3 - 25*2 + 22,this.y + 30 + 6);
+        if (checked == 1)g2d.setFont(bold);
+        else g2d.setFont(plain);
         g2d.drawString("视频",this.x + this.width - 30 - 80 - 25 - 80 + 22,this.y + 30 + 6);
+        if (checked == 2)g2d.setFont(bold);
+        else g2d.setFont(plain);
         g2d.drawString("其它",this.x + this.width - 30 - 80 + 22,this.y + 30 + 6);
         //draw board
         switch (checked){
             case 0:
                 g2d.setColor(IMAGE_BACKGROUND);
                 g2d.fillRect(this.x,this.y+60,this.width - 30,this.height - 60);
+                for (int i = 0; i < imageFiles.size(); i++) {
+                    String filename = imageFiles.get(i).getName();
+                    g2d.drawImage(IMAGE_ICON,this.x+100*i,this.y + 60,null);
+                }
                 break;
             case 1:
                 g2d.setColor(VIDEO_BACKGROUND);
                 g2d.fillRect(this.x,this.y+60,this.width - 15,this.height - 60);
+                for (int i = 0; i < videoFiles.size(); i++) {
+                    String filename = videoFiles.get(i).getName();
+                    g2d.drawImage(VIDEO_ICON,this.x+100*i,this.y + 60,null);
+                }
                 break;
             case 2:
                 g2d.setColor(OTHER_BACKGROUND);
                 g2d.fillRect(this.x,this.y + 60,this.width,this.height - 60);
+                for (int i = 0; i < otherFiles.size(); i++) {
+                    String filename = otherFiles.get(i).getName();
+                    g2d.drawImage(OTHER_ICON,this.x+100*i,this.y + 60,null);
+                }
         }
 
 
@@ -188,7 +213,50 @@ public class TypeClassifier implements Component{
     }
 
     public void setPath(String path){
+        new Thread(() -> {
+            this.path = path;
+            File dir = new File(path);
+            if (dir.isDirectory()){
+                File[] files = dir.listFiles();
+                if (files == null)return;
+                otherFiles.clear();
+                videoFiles.clear();
+                imageFiles.clear();
+                for (File file : files) {
+                    if (file.isDirectory())continue;
+                    int type = DetermineFileType.getType(file);
+                    switch (type){
+                        case DetermineFileType.IMAGE:
+                            imageFiles.add(file);
+                            break;
+                        case DetermineFileType.VIDEO:
+                            videoFiles.add(file);
+                            break;
+                        case DetermineFileType.OTHER:
+                            otherFiles.add(file);
+                    }
+                }
+            }
 
+        }).start();
+
+    }
+
+    /**
+     * 获取大图标
+     * @param f 要获取的文件
+     * @return 图标
+     */
+    private Icon getBigIcon(File f) {
+        if (f != null && f.exists()) {
+            try {
+                sun.awt.shell.ShellFolder sf = sun.awt.shell.ShellFolder.getShellFolder(f);
+                return new ImageIcon(sf.getIcon(true));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
 
