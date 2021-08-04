@@ -27,9 +27,9 @@ public class TypeClassifier implements Component{
     private final Color IMAGE_BACKGROUND = new Color(52,52,52);
 
 
-    static final Image IMAGE_ICON = new ImageIcon("src/lyun/longzhi/images/image.png").getImage();
-    static final Image VIDEO_ICON = new ImageIcon("src/lyun/longzhi/images/video.png").getImage();
-    static final Image OTHER_ICON = new ImageIcon("src/lyun/longzhi/images/other.png").getImage();
+    private static Image IMAGE_ICON;
+    private static Image VIDEO_ICON;
+    private static Image OTHER_ICON;
 
 
     private String path;
@@ -40,6 +40,14 @@ public class TypeClassifier implements Component{
         this.width = Math.max(width, 100);
         this.height = Math.max(height,100);
         setPath(path);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                IMAGE_ICON = new ImageIcon("src/lyun/longzhi/images/image.png").getImage();
+                VIDEO_ICON = new ImageIcon("src/lyun/longzhi/images/video.png").getImage();
+                OTHER_ICON = new ImageIcon("src/lyun/longzhi/images/other.png").getImage();
+            }
+        }).start();
     }
 
     @Override
