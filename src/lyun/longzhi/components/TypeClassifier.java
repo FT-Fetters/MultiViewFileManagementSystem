@@ -15,6 +15,8 @@ public class TypeClassifier implements Component{
     private int x,y;
     private int width,height;
     private int checked = 0;
+    private int page = 0;
+    private int maxPage = 0;
 
     private boolean enable = true;
 
@@ -30,6 +32,7 @@ public class TypeClassifier implements Component{
     private static Image IMAGE_ICON;
     private static Image VIDEO_ICON;
     private static Image OTHER_ICON;
+    private static Image WHEEL_ICON;
 
 
     private String path;
@@ -46,6 +49,7 @@ public class TypeClassifier implements Component{
                 IMAGE_ICON = new ImageIcon("src/lyun/longzhi/images/image.png").getImage();
                 VIDEO_ICON = new ImageIcon("src/lyun/longzhi/images/video.png").getImage();
                 OTHER_ICON = new ImageIcon("src/lyun/longzhi/images/other.png").getImage();
+                WHEEL_ICON = new ImageIcon("src/lyun/longzhi/images/wheel.png").getImage();
             }
         }).start();
     }
@@ -147,36 +151,47 @@ public class TypeClassifier implements Component{
             case 0:
                 g2d.setColor(IMAGE_BACKGROUND);
                 g2d.fillRect(this.x,this.y+60,this.width - 30,this.height - 60);
-                for (int i = 0; i < imageFiles.size(); i++) {
-                    String filename = imageFiles.get(i).getName();
-                    g2d.drawImage(IMAGE_ICON,this.x+100*i,this.y + 60,null);
-                }
+                drawFiles(g2d, imageFiles, IMAGE_ICON);
                 break;
             case 1:
                 g2d.setColor(VIDEO_BACKGROUND);
                 g2d.fillRect(this.x,this.y+60,this.width - 15,this.height - 60);
-                for (int i = 0; i < videoFiles.size(); i++) {
-                    String filename = videoFiles.get(i).getName();
-                    g2d.drawImage(VIDEO_ICON,this.x+100*i,this.y + 60,null);
-                }
+                drawFiles(g2d, videoFiles, VIDEO_ICON);
                 break;
             case 2:
                 g2d.setColor(OTHER_BACKGROUND);
                 g2d.fillRect(this.x,this.y + 60,this.width,this.height - 60);
-                for (int i = 0; i < otherFiles.size(); i++) {
-                    String filename = otherFiles.get(i).getName();
-                    g2d.drawImage(OTHER_ICON,this.x+100*i,this.y + 60,null);
-                }
+                drawFiles(g2d, otherFiles, OTHER_ICON);
         }
+        //draw page
+        g2d.setColor(Color.white);
+        g2d.setFont(new Font("微软雅黑",Font.PLAIN,16));
+        g2d.drawString(page+1 + "/"+maxPage,this.x + (this.width - 30)/2,this.y + this.height - 10);
+        g2d.drawImage(WHEEL_ICON,this.x + (this.width - 30)/2 + 25,this.y + this.height - 24,null);
 
+    }
 
+    private void drawFiles(Graphics2D g2d, List<File> videoFiles, Image videoIcon) {
+        int begin = page * 40;
+        int end = (page * 40 + 40)>videoFiles.size() ? videoFiles.size() - begin+ begin:page * 40 + 40;
+        for (int i = begin; i < end; i++) {
+            String filename = videoFiles.get(i).getName();
+            g2d.drawImage(videoIcon,this.x+112*((i-begin)%10) + 20 + 40,this.y + 60 + 10 + 120*((i-begin)/10),null);
+            g2d.setColor(Color.white);
+            g2d.setFont(new Font("微软雅黑",Font.PLAIN,16));
+            if (filename.length() > 6)filename = filename.substring(0,6) + "..";
+            g2d.drawString(filename,this.x+112*((i-begin)%10) + 20 + 40,this.y + 60 + 64 + 10 + 120*((i-begin)/10) + 15);
+        }
     }
 
     @Override
     public void mouseClick(int x, int y) {
-        if (RectangleOperation.pointInRectangle(x,y, this.width - 30 - 80,0, this.width - 30,60))checked = 2;
-        else if (RectangleOperation.pointInRectangle(x,y,this.width - 30 - 80 - 25 - 80,0,this.width - 30 - 80 - 25,60))checked = 1;
-        else if (RectangleOperation.pointInRectangle(x,y,this.width - 30 - 80*3 - 25*2,0,this.width - 30 - 80*3 - 25*2 + 80,60))checked = 0;
+        if (RectangleOperation.pointInRectangle(x,y, this.width - 30 - 80,0, this.width - 30,60)){
+            checked = 2;page = 0;maxPage = otherFiles.size()%40 == 0 ? otherFiles.size()/40:otherFiles.size()/40+1;}
+        else if (RectangleOperation.pointInRectangle(x,y,this.width - 30 - 80 - 25 - 80,0,this.width - 30 - 80 - 25,60)){
+            checked = 1;page = 0;maxPage = videoFiles.size()%40 == 0 ? videoFiles.size()/40:videoFiles.size()/40+1;}
+        else if (RectangleOperation.pointInRectangle(x,y,this.width - 30 - 80*3 - 25*2,0,this.width - 30 - 80*3 - 25*2 + 80,60)){
+            checked = 0;page = 0;maxPage = ((imageFiles.size()%40 == 0) ? (imageFiles.size()/40):(imageFiles.size()/40+1));}
     }
 
     @Override
@@ -218,6 +233,38 @@ public class TypeClassifier implements Component{
     @Override
     public void mouseWheelMoved(int wheel) {
 
+        if (wheel == 1)//向下
+        {
+            int fileSize = 0;
+            switch (checked){
+                case 0:
+                    fileSize = imageFiles.size();
+                    break;
+                case 1:
+                    fileSize = videoFiles.size();
+                    break;
+                case 2:
+                    fileSize = otherFiles.size();
+            }
+            if ((page + 1)*40<fileSize){
+                page++;
+            }
+        }else if (wheel == -1){
+            int fileSize = 0;
+            switch (checked){
+                case 0:
+                    fileSize = imageFiles.size();
+                    break;
+                case 1:
+                    fileSize = videoFiles.size();
+                    break;
+                case 2:
+                    fileSize = otherFiles.size();
+            }
+            if (page > 0){
+                page--;
+            }
+        }
     }
 
     public void setPath(String path){
@@ -245,7 +292,7 @@ public class TypeClassifier implements Component{
                     }
                 }
             }
-
+            page = 0;maxPage = ((imageFiles.size()%40 == 0) ? (imageFiles.size()/40):(imageFiles.size()/40+1));
         }).start();
 
     }
@@ -266,6 +313,7 @@ public class TypeClassifier implements Component{
         }
         return null;
     }
+
 
 
 }
