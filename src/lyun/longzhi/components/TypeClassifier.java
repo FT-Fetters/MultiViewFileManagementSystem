@@ -196,16 +196,18 @@ public class TypeClassifier implements Component{
 
     @Override
     public void mouseEnter() {
-
+        if (!enable)return;
     }
 
     @Override
     public void mouseLeave() {
+        if (!enable)return;
         Main.mainFrame.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
 
     @Override
     public void mouseMove(int x, int y) {
+        if (!enable)return;
         if (
                 RectangleOperation.pointInRectangle(x,y, this.width - 30 - 80,0, this.width - 30,60) ||
                         RectangleOperation.pointInRectangle(x,y,this.width - 30 - 80 - 25 - 80,0,this.width - 30 - 80 - 25,60) ||
@@ -217,22 +219,22 @@ public class TypeClassifier implements Component{
 
     @Override
     public void mouseDoubleClick(int x, int y) {
-
+        if (!enable)return;
     }
 
     @Override
     public void mousePress(int x, int y) {
-
+        if (!enable)return;
     }
 
     @Override
     public void mouseRelease() {
-
+        if (!enable)return;
     }
 
     @Override
     public void mouseWheelMoved(int wheel) {
-
+        if (!enable)return;
         if (wheel == 1)//向下
         {
             int fileSize = 0;
