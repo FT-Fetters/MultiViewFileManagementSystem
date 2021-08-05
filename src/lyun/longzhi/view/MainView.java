@@ -22,7 +22,7 @@ public class MainView extends JPanel implements Runnable {
     //用于存放控件列表
     private final List<Component> componentList = new ArrayList<>();
 
-    private String path = "D:\\";
+    private String path = "E:\\";
 
 
     /**
