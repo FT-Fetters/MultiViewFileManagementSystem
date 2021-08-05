@@ -1,6 +1,7 @@
 package lyun.longzhi.components;
 
 import java.awt.*;
+import java.io.IOException;
 
 public interface Component {
 
@@ -100,7 +101,7 @@ public interface Component {
     /**
      * 鼠标双击事件
      */
-    void mouseDoubleClick(int x,int y);
+    void mouseDoubleClick(int x,int y) throws IOException;
 
     /**
      * 鼠标按下事件

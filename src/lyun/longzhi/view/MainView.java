@@ -9,6 +9,7 @@ import lyun.longzhi.utils.RectangleOperation;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,7 +88,11 @@ public class MainView extends JPanel implements Runnable {
                                 component.getX()+component.getWidth(),
                                 component.getY()+component.getHeight())
                         ) {
-                            component.mouseDoubleClick(e.getX()-component.getX(),e.getY()-component.getY());
+                            try {
+                                component.mouseDoubleClick(e.getX()-component.getX(),e.getY()-component.getY());
+                            } catch (IOException ioException) {
+                                ioException.printStackTrace();
+                            }
                         }
                     }
                 }else if (e.getClickCount() == 1 && SwingUtilities.isLeftMouseButton(e)){

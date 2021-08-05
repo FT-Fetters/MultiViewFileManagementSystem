@@ -5,6 +5,7 @@ import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -180,7 +181,7 @@ public class FileListColumn implements Component{
     }
 
     @Override
-    public void mouseDoubleClick(int x,int y) {
+    public void mouseDoubleClick(int x,int y) throws IOException {
         if (!enable)return;
         if (x > 10 && x < this.width-20 && y > 10 && y < this.height - 10){
             int tmp = (y-10)/30 + roller;
@@ -196,8 +197,14 @@ public class FileListColumn implements Component{
                 setPath(newPath);
                 this.choose = -1;
                 this.roller = 0;
+            }else{
+                String newPath = files.get(tmp).getPath();
+                if (pathSelector != null){
+                    Runtime.getRuntime().exec(new String[]{ "cmd", "/c", newPath});
+                }
             }
         }
+
     }
 
     @Override
