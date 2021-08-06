@@ -23,6 +23,8 @@ public class PathSelector implements Component{
 
     private TextLabel textLabel;
 
+    private TypeClassifier typeClassifier;
+
     private JFileChooser jFileChooser;
 
     public PathSelector(String path,int x,int y){
@@ -218,6 +220,7 @@ public class PathSelector implements Component{
             path = prePaths.pop();
             if (textLabel != null)textLabel.text = path;
             if (fileListColumn != null)fileListColumn.setPath(path);
+            if (typeClassifier != null)typeClassifier.setPath(path);
         }
     }
 
@@ -227,6 +230,7 @@ public class PathSelector implements Component{
             path = sufPaths.pop();
             if (textLabel != null)textLabel.text = path;
             if (fileListColumn != null)fileListColumn.setPath(path);
+            if (typeClassifier != null)typeClassifier.setPath(path);
         }
     }
 
@@ -243,6 +247,7 @@ public class PathSelector implements Component{
             path = tmp.getPath();
             if (textLabel != null)textLabel.text = path;
             if (fileListColumn != null)fileListColumn.setPath(path);
+            if (typeClassifier != null)typeClassifier.setPath(path);
         }
         this.prePaths.clear();
         this.sufPaths.clear();
@@ -254,8 +259,9 @@ public class PathSelector implements Component{
         this.path = path;
     }
 
-    public void connect(FileListColumn fileListColumn,TextLabel textLabel){
+    public void connect(FileListColumn fileListColumn,TextLabel textLabel,TypeClassifier typeClassifier){
         this.fileListColumn = fileListColumn;
         this.textLabel = textLabel;
+        this.typeClassifier = typeClassifier;
     }
 }

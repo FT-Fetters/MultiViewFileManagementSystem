@@ -7,6 +7,8 @@ public class LoadConfigure {
     private static int SCREEN_WIDTH;
     private static int SCREEN_HEIGHT;
 
+    private static String path = "D:\\";
+
     public static boolean loading(){
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         SCREEN_HEIGHT = (int) screenSize.getHeight();
@@ -23,5 +25,11 @@ public class LoadConfigure {
         return SCREEN_HEIGHT;
     }
 
+    public static synchronized String getPath() {
+        return path;
+    }
 
+    public static synchronized void setPath(String path) {
+        LoadConfigure.path = path;
+    }
 }

@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,12 +18,14 @@ public class TypeClassifier implements Component{
     private int checked = 0;
     private int page = 0;
     private int maxPage = 0;
+    private int mouseMoveX = -1;
+    private int mouseMoveY = -1;
 
     private boolean enable = true;
 
-    private List<File> imageFiles = new ArrayList<>();
-    private List<File> videoFiles = new ArrayList<>();
-    private List<File> otherFiles = new ArrayList<>();
+    private final List<File> imageFiles = new ArrayList<>();
+    private final List<File> videoFiles = new ArrayList<>();
+    private final List<File> otherFiles = new ArrayList<>();
 
     private final Color OTHER_BACKGROUND = new Color(32,32,32);
     private final Color VIDEO_BACKGROUND= new Color(42,42,42);
@@ -43,14 +46,11 @@ public class TypeClassifier implements Component{
         this.width = Math.max(width, 100);
         this.height = Math.max(height,100);
         setPath(path);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                IMAGE_ICON = new ImageIcon("src/lyun/longzhi/images/image.png").getImage();
-                VIDEO_ICON = new ImageIcon("src/lyun/longzhi/images/video.png").getImage();
-                OTHER_ICON = new ImageIcon("src/lyun/longzhi/images/other.png").getImage();
-                WHEEL_ICON = new ImageIcon("src/lyun/longzhi/images/wheel.png").getImage();
-            }
+        new Thread(() -> {
+            IMAGE_ICON = new ImageIcon("src/lyun/longzhi/images/image.png").getImage();
+            VIDEO_ICON = new ImageIcon("src/lyun/longzhi/images/video.png").getImage();
+            OTHER_ICON = new ImageIcon("src/lyun/longzhi/images/other.png").getImage();
+            WHEEL_ICON = new ImageIcon("src/lyun/longzhi/images/wheel.png").getImage();
         }).start();
     }
 
@@ -171,12 +171,17 @@ public class TypeClassifier implements Component{
 
     }
 
-    private void drawFiles(Graphics2D g2d, List<File> videoFiles, Image videoIcon) {
+    private void drawFiles(Graphics2D g2d, List<File> files, Image icon) {
+        if (mouseMoveX != -1 && mouseMoveY != -1){
+            g2d.setColor(Color.gray);
+            if (files.size() > page*40 + mouseMoveY*10 + mouseMoveX)
+            g2d.drawRect(this.x+ mouseMoveX*112 + 60-4,this.y+mouseMoveY*120 + 60 + 10,64+8,86);
+        }
         int begin = page * 40;
-        int end = (page * 40 + 40)>videoFiles.size() ? videoFiles.size() - begin+ begin:page * 40 + 40;
+        int end = (page * 40 + 40)>files.size() ? files.size() - begin+ begin:page * 40 + 40;
         for (int i = begin; i < end; i++) {
-            String filename = videoFiles.get(i).getName();
-            g2d.drawImage(videoIcon,this.x+112*((i-begin)%10) + 20 + 40,this.y + 60 + 10 + 120*((i-begin)/10),null);
+            String filename = files.get(i).getName();
+            g2d.drawImage(icon,this.x+112*((i-begin)%10) + 20 + 40,this.y + 60 + 10 + 120*((i-begin)/10),null);
             g2d.setColor(Color.white);
             g2d.setFont(new Font("微软雅黑",Font.PLAIN,16));
             if (filename.length() > 6)filename = filename.substring(0,6) + "..";
@@ -215,11 +220,38 @@ public class TypeClassifier implements Component{
         ){
             Main.mainFrame.setCursor(new Cursor(Cursor.HAND_CURSOR));
         }else Main.mainFrame.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        if(x > 60 && x < 1120 && y > 60){
+            mouseMoveX = (x-60)/112;
+            mouseMoveY = (y - 60)/120;
+        }else {
+            mouseMoveX = -1;
+            mouseMoveY = -1;
+        }
     }
 
     @Override
     public void mouseDoubleClick(int x, int y) {
         if (!enable)return;
+        if (mouseMoveX != -1 && mouseMoveY != -1){
+            String newPath = null;
+            switch (checked){
+                case 0:
+                    newPath = imageFiles.get(page*40 + mouseMoveY*10 + mouseMoveX).getPath();
+                    break;
+                case 1:
+                    newPath = videoFiles.get(page*40 + mouseMoveY*10 + mouseMoveX).getPath();
+                    break;
+                case 2:
+                    newPath = otherFiles.get(page*40 + mouseMoveY*10 + mouseMoveX).getPath();
+            }
+            if (newPath!=null) {
+                try {
+                    Runtime.getRuntime().exec(new String[]{"cmd","/C","\""+newPath + "\""});
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     @Override
@@ -252,17 +284,6 @@ public class TypeClassifier implements Component{
                 page++;
             }
         }else if (wheel == -1){
-            int fileSize = 0;
-            switch (checked){
-                case 0:
-                    fileSize = imageFiles.size();
-                    break;
-                case 1:
-                    fileSize = videoFiles.size();
-                    break;
-                case 2:
-                    fileSize = otherFiles.size();
-            }
             if (page > 0){
                 page--;
             }
@@ -270,8 +291,9 @@ public class TypeClassifier implements Component{
     }
 
     public void setPath(String path){
-        new Thread(() -> {
-            this.path = path;
+        TypeClassifier typeClassifier = this;
+        Runnable tR = () -> {
+            typeClassifier.path = path;
             File dir = new File(path);
             if (dir.isDirectory()){
                 File[] files = dir.listFiles();
@@ -295,8 +317,11 @@ public class TypeClassifier implements Component{
                 }
             }
             page = 0;maxPage = ((imageFiles.size()%40 == 0) ? (imageFiles.size()/40):(imageFiles.size()/40+1));
-        }).start();
-
+        };
+        Thread t = new Thread(tR);
+        if (this.enable)t.setPriority(8);//如果启用的话则给更高的线程优先
+        else t.setPriority(2);
+        t.start();
     }
 
     /**

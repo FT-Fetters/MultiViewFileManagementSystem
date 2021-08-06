@@ -37,6 +37,8 @@ public class FileListColumn implements Component{
 
     private PathSelector pathSelector;
 
+    private TypeClassifier  typeClassifier;
+
     public FileListColumn(String path, int x, int y,int maxShow){
         this.path = path;
         this.x = x;
@@ -194,6 +196,7 @@ public class FileListColumn implements Component{
                 if (textLabel != null){
                     textLabel.text = newPath;
                 }
+                if (typeClassifier != null)typeClassifier.setPath(newPath);
                 setPath(newPath);
                 this.choose = -1;
                 this.roller = 0;
@@ -269,10 +272,9 @@ public class FileListColumn implements Component{
 
 
 
-
-
-        public void connect(TextLabel textLabel,PathSelector pathSelector){
+    public void connect(TextLabel textLabel,PathSelector pathSelector,TypeClassifier typeClassifier){
         this.textLabel = textLabel;
         this.pathSelector = pathSelector;
+        this.typeClassifier = typeClassifier;
     }
 }

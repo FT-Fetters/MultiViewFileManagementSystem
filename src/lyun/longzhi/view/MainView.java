@@ -51,7 +51,7 @@ public class MainView extends JPanel implements Runnable {
 
         //TypeClassifier
         TypeClassifier typeClassifier = new TypeClassifier(25,95,Main.mainFrame.getWidth() -65,550,"");
-        typeClassifier.setPath("D:\\图像分类\\所有用户\\用户2");
+        typeClassifier.setPath(path);
 
         //NavigationBar
         Component[][] components = {{fileListColumn,selector,textLabel},{typeClassifier},null,null};
@@ -61,8 +61,8 @@ public class MainView extends JPanel implements Runnable {
         nav.addContent("时间轴图");
         nav.addContent("自定义视图");
 
-        fileListColumn.connect(textLabel,selector);
-        selector.connect(fileListColumn,textLabel);
+        fileListColumn.connect(textLabel,selector,typeClassifier);
+        selector.connect(fileListColumn,textLabel,typeClassifier);
 
         componentList.add(fileListColumn);
         componentList.add(textLabel);
