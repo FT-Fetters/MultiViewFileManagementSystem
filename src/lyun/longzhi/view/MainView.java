@@ -53,13 +53,17 @@ public class MainView extends JPanel implements Runnable {
         TypeClassifier typeClassifier = new TypeClassifier(25,95,Main.mainFrame.getWidth() -65,550,"");
         typeClassifier.setPath(path);
 
+        //ThreeStageSwitch
+        ThreeStageSwitch threeStageSwitch = new ThreeStageSwitch(25 + Main.mainFrame.getWidth() - 290,95);
+
         //NavigationBar
-        Component[][] components = {{fileListColumn,selector,textLabel},{typeClassifier},null,null};
+        Component[][] components = {{fileListColumn,selector,textLabel},{typeClassifier}, {threeStageSwitch},null};
         NavigationBar nav = new NavigationBar(4,25,15,Main.mainFrame.getWidth() -65,60,components);
         nav.addContent("文件列表");
         nav.addContent("分类图表");
         nav.addContent("时间轴图");
         nav.addContent("自定义视图");
+
 
         fileListColumn.connect(textLabel,selector,typeClassifier);
         selector.connect(fileListColumn,textLabel,typeClassifier);
@@ -69,6 +73,7 @@ public class MainView extends JPanel implements Runnable {
         componentList.add(selector);
         componentList.add(nav);
         componentList.add(typeClassifier);
+        componentList.add(threeStageSwitch);
 
     }
 
