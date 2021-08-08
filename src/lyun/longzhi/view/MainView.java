@@ -56,8 +56,11 @@ public class MainView extends JPanel implements Runnable {
         //ThreeStageSwitch
         ThreeStageSwitch threeStageSwitch = new ThreeStageSwitch(25 + Main.mainFrame.getWidth() - 290,95);
 
+        //TimeAxis
+        TimeAxis timeAxis = new TimeAxis(25,155,Main.mainFrame.getWidth() -65,500,"");
+
         //NavigationBar
-        Component[][] components = {{fileListColumn,selector,textLabel},{typeClassifier}, {threeStageSwitch},null};
+        Component[][] components = {{fileListColumn,selector,textLabel},{typeClassifier}, {threeStageSwitch,timeAxis},null};
         NavigationBar nav = new NavigationBar(4,25,15,Main.mainFrame.getWidth() -65,60,components);
         nav.addContent("文件列表");
         nav.addContent("分类图表");
@@ -74,6 +77,7 @@ public class MainView extends JPanel implements Runnable {
         componentList.add(nav);
         componentList.add(typeClassifier);
         componentList.add(threeStageSwitch);
+        componentList.add(timeAxis);
 
     }
 

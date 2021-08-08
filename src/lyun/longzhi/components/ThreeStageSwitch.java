@@ -1,7 +1,8 @@
 package lyun.longzhi.components;
 
+import lyun.longzhi.Main;
+
 import java.awt.*;
-import java.io.IOException;
 
 public class ThreeStageSwitch implements Component{
     private final int width = 144,height = 24;
@@ -125,16 +126,16 @@ public class ThreeStageSwitch implements Component{
 
     @Override
     public void mouseLeave() {
-
+        Main.mainFrame.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
 
     @Override
     public void mouseMove(int x, int y) {
-
+        Main.mainFrame.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 
     @Override
-    public void mouseDoubleClick(int x, int y) throws IOException {
+    public void mouseDoubleClick(int x, int y) {
 
     }
 
@@ -163,26 +164,26 @@ public class ThreeStageSwitch implements Component{
                 int ans = 0;
                 if (abs == 2){
                     for (int i = 0; i < 24; i++) {
-                        Thread.sleep(i/4);
+                        Thread.sleep((32-i)/4);
                         ans += 2;
                         if (checked - to > 0)slideRatio=-ans;
                         else slideRatio = ans;
                     }
                     for (int i = 24;i > 0;i--){
-                        Thread.sleep(i/4);
+                        Thread.sleep((32-i)/4);
                         ans += 2;
                         if (checked - to > 0)slideRatio=-ans;
                         else slideRatio = ans;
                     }
                 }else if (abs == 1){
                     for (int i = 0; i < 24; i++) {
-                        Thread.sleep(i/4);
+                        Thread.sleep((32-i)/4);
                         ans += 1;
                         if (checked - to > 0)slideRatio=-ans;
                         else slideRatio = ans;
                     }
                     for (int i = 24;i > 0;i--){
-                        Thread.sleep(i/4);
+                        Thread.sleep((32-i)/4);
                         ans += 1;
                         if (checked - to > 0)slideRatio=-ans;
                         else slideRatio = ans;
