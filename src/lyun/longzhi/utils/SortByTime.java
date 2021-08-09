@@ -1,9 +1,7 @@
 package lyun.longzhi.utils;
 
 import java.io.File;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * 设计一个能获取指定目录下的所有文件,并且按照文件的修改时间分类的方法
@@ -18,7 +16,7 @@ public class SortByTime {
         File file = new File(path);
         File[] fs = file.listFiles();
         TreeMap<Integer, List<File>> treeMap = new TreeMap<Integer, List<File>>();
-        List list = new ArrayList();
+        List<File> list = new ArrayList<>();
         for (File f : fs) {
 
             Date date = new Date(f.lastModified());
@@ -30,11 +28,9 @@ public class SortByTime {
                 treeMap.put(year, list);
             }
             if (treeMap.containsKey(year)) {
-                Iterator it = treeMap.entrySet().iterator();
-                while (it.hasNext()) {
-                    Map.Entry entry = (Map.Entry) it.next();
-                    Object key = entry.getKey();
-                    ArrayList value = (ArrayList) entry.getValue();
+                for (Map.Entry<Integer, List<File>> integerListEntry : treeMap.entrySet()) {
+                    Object key = ((Map.Entry) integerListEntry).getKey();
+                    ArrayList value = (ArrayList) ((Map.Entry) integerListEntry).getValue();
                     if (key.equals(year)) {
                         value.add(f);
                     }
@@ -48,7 +44,7 @@ public class SortByTime {
         File file = new File(path);
         File[] fs = file.listFiles();
         TreeMap<Integer, List<File>> treeMap = new TreeMap<Integer, List<File>>();
-        List list = new ArrayList();
+        List<File> list = new ArrayList<>();
         for (File f : fs) {
             Date date = new Date(f.lastModified());
             Calendar ca = Calendar.getInstance();
@@ -59,11 +55,9 @@ public class SortByTime {
                 treeMap.put(month, list);
             }
             if (treeMap.containsKey(month)) {
-                Iterator it = treeMap.entrySet().iterator();
-                while (it.hasNext()) {
-                    Map.Entry entry = (Map.Entry) it.next();
-                    Object key = entry.getKey();
-                    ArrayList value = (ArrayList) entry.getValue();
+                for (Map.Entry<Integer, List<File>> integerListEntry : treeMap.entrySet()) {
+                    Object key = ((Map.Entry) integerListEntry).getKey();
+                    ArrayList value = (ArrayList) ((Map.Entry) integerListEntry).getValue();
                     if (key.equals(month)) {
                         value.add(f);
                     }
@@ -77,7 +71,7 @@ public class SortByTime {
         File file = new File(path);
         File[] fs = file.listFiles();
         TreeMap<Integer, List<File>> treeMap = new TreeMap<Integer, List<File>>();
-        List list = new ArrayList();
+        List<File> list = new ArrayList<>();
         for (File f : fs) {
             Date date = new Date(f.lastModified());
             Calendar ca = Calendar.getInstance();
@@ -88,11 +82,9 @@ public class SortByTime {
                 treeMap.put(day, list);
             }
             if (treeMap.containsKey(day)) {
-                Iterator it = treeMap.entrySet().iterator();
-                while (it.hasNext()) {
-                    Map.Entry entry = (Map.Entry) it.next();
-                    Object key = entry.getKey();
-                    ArrayList value = (ArrayList) entry.getValue();
+                for (Map.Entry<Integer, List<File>> integerListEntry : treeMap.entrySet()) {
+                    Object key = ((Map.Entry) integerListEntry).getKey();
+                    ArrayList value = (ArrayList) ((Map.Entry) integerListEntry).getValue();
                     if (key.equals(day)) {
                         value.add(f);
                     }

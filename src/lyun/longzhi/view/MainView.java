@@ -57,7 +57,7 @@ public class MainView extends JPanel implements Runnable {
         ThreeStageSwitch threeStageSwitch = new ThreeStageSwitch(25 + Main.mainFrame.getWidth() - 290,95);
 
         //TimeAxis
-        TimeAxis timeAxis = new TimeAxis(25,155,Main.mainFrame.getWidth() -65,500,"");
+        TimeAxis timeAxis = new TimeAxis(25,135,Main.mainFrame.getWidth() -65,520,"");
 
         //NavigationBar
         Component[][] components = {{fileListColumn,selector,textLabel},{typeClassifier}, {threeStageSwitch,timeAxis},null};
