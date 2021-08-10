@@ -178,9 +178,11 @@ public class TimeAxis implements Component{
 
     @Override
     public void mouseWheelMoved(int wheel) {
-        if (wheel == 1){//to right
+        if (!enable)return;
+        if (move)return;
+        if (wheel == 1 && selectedTime > 0){//to right
             timeSwitch(false);
-        }else if (wheel == -1){//to left
+        }else if (wheel == -1 && selectedTime < (claType > 0 ? (claType > 1 ? dayMap:monthMap):yearMap).size() - 1){//to left
             timeSwitch(true);
         }
     }
@@ -197,39 +199,75 @@ public class TimeAxis implements Component{
         g2d.setColor(Color.white);
         Font font = new Font("微软雅黑", Font.PLAIN, 18);
         g2d.setFont(font);
+        int selectWidth = FontUtils.getWordWidth(font,curSet[selectedTime]);
         g2d.drawString(
                 curSet[selectedTime],
-                this.x + (this.width - FontUtils.getWordWidth(font,curSet[selectedTime]))/2,
+                this.x + (this.width - selectWidth)/2,
                 this.y + FontUtils.getWordHeight(font) + 8
         );
-        g2d.setColor(new Color(171,171,171));
+        g2d.setColor(new Color(121,121,121));
         font = new Font("微软雅黑", Font.PLAIN, 18);
         g2d.setFont(font);
         if (selectedTime > 0){
             g2d.drawString(
                     curSet[selectedTime-1],
-                    this.x + (this.width - FontUtils.getWordWidth(font,curSet[selectedTime]))/2 - FontUtils.getWordWidth(font,curSet[selectedTime-1]) - 20,
+                    this.x + (this.width - selectWidth)/2 - FontUtils.getWordWidth(font,curSet[selectedTime-1]) - 20,
                     this.y + FontUtils.getWordHeight(font) + 8
             );
         }
         if (selectedTime < curSet.length - 1 ){
             g2d.drawString(
                     curSet[selectedTime+1],
-                    this.x + (this.width - FontUtils.getWordWidth(font,curSet[selectedTime]))/2 + FontUtils.getWordWidth(font,curSet[selectedTime]) + 20,
+                    this.x + (this.width - selectWidth)/2 + selectWidth + 20,
                     this.y + FontUtils.getWordHeight(font) + 8
             );
         }
     }
 
     private void moveDrawTime(Graphics2D g2d,String[] curSet){
-
+        //center move
+        Font font = new Font("微软雅黑", Font.PLAIN, 18);
+        int c = 255 - (255 - 121)*Math.abs(moveState)/100;
+        int selectWidth = FontUtils.getWordWidth(font,curSet[selectedTime]);
+        g2d.setColor(new Color(c,c,c));
+        g2d.setFont(font);
+        g2d.drawString(
+                curSet[selectedTime],
+                this.x + (this.width - selectWidth)/2 + (moveState > 0 ? selectWidth + 20 : FontUtils.getWordWidth(font,curSet[selectedTime]))*moveState/100,
+                this.y + FontUtils.getWordHeight(font) + 8
+                );
+        c = 121 + (255 - 121)*Math.abs(moveState)/100;
+        g2d.setColor(new Color(c,c,c));
+        if (moveState > 0 && selectWidth >0){
+            g2d.drawString(
+                    curSet[selectedTime - 1],
+                    this.x + (this.width - selectWidth)/2 - (FontUtils.getWordWidth(font,curSet[selectedTime-1]) + 20)*(100 - moveState)/100,
+                    this.y + FontUtils.getWordHeight(font) + 8
+                    );
+        }else if (moveState < 0 && selectedTime < curSet.length - 1){
+            g2d.drawString(
+                    curSet[selectedTime + 1],
+                    this.x + (this.width - selectWidth)/2 + (selectWidth + 20) + (selectWidth + 20)*moveState/100 ,
+                    this.y + FontUtils.getWordHeight(font) + 8
+                    );
+        }
     }
 
     private void timeSwitch(boolean left){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
+        new Thread(() -> {
+            try {
+                move = true;
+                for (int i = 1;i <= 100;++i){
+                    Thread.sleep(1);
+                    if (left)moveState = - i;
+                        else moveState = i;
+                }
+                move = false;
+                moveState = 0;
+                if (left)selectedTime++;
+                else selectedTime--;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }).start();
     }
