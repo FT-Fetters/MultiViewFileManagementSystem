@@ -58,6 +58,7 @@ public class MainView extends JPanel implements Runnable {
 
         //TimeAxis
         TimeAxis timeAxis = new TimeAxis(25,135,Main.mainFrame.getWidth() -65,520,"");
+        timeAxis.setPath(path);//我也不知为何不在new完后如果不调用setpath就会报错,明明构造函数里面set了
 
         //NavigationBar
         Component[][] components = {{fileListColumn,selector,textLabel},{typeClassifier}, {threeStageSwitch,timeAxis},null};
@@ -68,8 +69,9 @@ public class MainView extends JPanel implements Runnable {
         nav.addContent("自定义视图");
 
 
-        fileListColumn.connect(textLabel,selector,typeClassifier);
-        selector.connect(fileListColumn,textLabel,typeClassifier);
+        fileListColumn.connect(textLabel,selector,typeClassifier,timeAxis);
+        selector.connect(fileListColumn,textLabel,typeClassifier,timeAxis);
+        threeStageSwitch.connect(timeAxis);
 
         componentList.add(fileListColumn);
         componentList.add(textLabel);

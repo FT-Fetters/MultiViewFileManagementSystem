@@ -2,6 +2,7 @@ package lyun.longzhi.components;
 
 
 import lyun.longzhi.utils.FontUtils;
+import lyun.longzhi.utils.SortByTime;
 import sun.font.FontDesignMetrics;
 
 import java.awt.*;
@@ -12,48 +13,32 @@ import java.util.List;
 
 public class TimeAxis implements Component{
 
-    public final int CLA_BY_YEAR = 0;//按照年分类
-    public final int CLA_BY_MONTH = 1;//按照月份分类
-    public final int CLA_BY_DAY = 2;//按照日期分类
+    public static final int CLA_BY_YEAR = 0;//按照年分类
+    public static final int CLA_BY_MONTH = 1;//按照月份分类
+    public static final int CLA_BY_DAY = 2;//按照日期分类
 
 
     private int claType = CLA_BY_YEAR;
     private int x,y;
     private int width,height;
-    private int selectedTime = 1;
+    private int selectedTime = 0;
     private int moveState = 0;
 
     private boolean enable = true;
     private boolean move = false;
+    private boolean loading = true;
 
     private String path;
 
-    private final TreeMap<String,List<File>> yearMap = new TreeMap<>((o1, o2) -> {
-        int t1 = Integer.parseInt(o1.replace("年",""));
-        int t2 = Integer.parseInt(o2.replace("年",""));
-        return t1 - t2;
-    });
-    private final TreeMap<String,List<File>> monthMap = new TreeMap<>();
-    private final TreeMap<String, List<File>> dayMap = new TreeMap<>();
+    private TreeMap<String,List<Map.Entry<File, Image>>> yearMap = new TreeMap<>();
+    private TreeMap<String,List<Map.Entry<File, Image>>> monthMap = new TreeMap<>();
+    private TreeMap<String,List<Map.Entry<File, Image>>> dayMap = new TreeMap<>();
 
     public TimeAxis(int x,int y,int width,int height,String path){
         this.x = x;
         this.y = y;
         this.resize(width,height);
-        this.setPath(path);
-        //测试样例代码
-        File t1 = new File("D:\\xz\\ts.txt");
-        File t2 = new File("D:\\xz\\HEU23_Debug.txt");
-        File t3 = new File("C:\\迅雷下载\\20977.zip");
-        List<File> tl1 = new ArrayList<>();
-        tl1.add(t1);
-        List<File> tl2 = new ArrayList<>();
-        tl2.add(t2);
-        List<File> tl3 = new ArrayList<>();
-        tl3.add(t3);
-        yearMap.put("2021年",tl1);
-        yearMap.put("2022年",tl2);
-        yearMap.put("2020年",tl3);
+        this.setPath(path);//不知为何这句没用,必须在new完之后再调用setpath
     }
 
 
@@ -129,7 +114,8 @@ public class TimeAxis implements Component{
             g2d.setColor(new Color(32,32,32));
             g2d.fillRect(this.x,this.y,this.width,this.height);
             //time
-            TreeMap<String,List<File>> cur = claType > 0 ? (claType > 1 ? dayMap:monthMap):yearMap;
+            if (loading)return;
+            TreeMap<String,List<Map.Entry<File, Image>>> cur = claType > 0 ? (claType > 1 ? dayMap:monthMap):yearMap;
             String[] curSet = new String[cur.size()];
             int i = 0;
             for (String s : cur.keySet()) {
@@ -137,43 +123,47 @@ public class TimeAxis implements Component{
                 i++;
             }
             if (move)moveDrawTime(g2d,curSet);
-                else normalDrawTime(g2d,curSet);
+            else normalDrawTime(g2d,curSet);
+            //border
+            g2d.setColor(new Color(43,43,43));
+            g2d.setStroke(new BasicStroke(1.5f));
+            g2d.drawLine(this.x,this.y+50,this.x + this.width,this.y + 50);
         }
     }
 
     @Override
     public void mouseClick(int x, int y) {
-
+        if (!enable)return;
     }
 
     @Override
     public void mouseEnter() {
-
+        if (!enable)return;
     }
 
     @Override
     public void mouseLeave() {
-
+        if (!enable)return;
     }
 
     @Override
     public void mouseMove(int x, int y) {
-
+        if (!enable)return;
     }
 
     @Override
     public void mouseDoubleClick(int x, int y) throws IOException {
-
+        if (!enable)return;
     }
 
     @Override
     public void mousePress(int x, int y) {
-
+        if (!enable)return;
     }
 
     @Override
     public void mouseRelease() {
-
+        if (!enable)return;
     }
 
     @Override
@@ -192,7 +182,18 @@ public class TimeAxis implements Component{
      * @param path 路径
      */
     public void setPath(String path){
-
+        Runnable runnable = () -> {
+            loading = true;
+            this.yearMap = SortByTime.sortByYear(path);
+            this.monthMap = SortByTime.sortByMonth(path);
+            this.dayMap = SortByTime.sortByDay(path);
+            loading = false;
+        };
+        Thread thread = new Thread(runnable);
+        if (enable){
+            thread.setPriority(8);
+        }else thread.setPriority(2);
+        thread.start();
     }
 
     private void normalDrawTime(Graphics2D g2d,String[] curSet){
@@ -270,6 +271,10 @@ public class TimeAxis implements Component{
                 e.printStackTrace();
             }
         }).start();
+    }
+
+    public void setClaType(int claType){
+        this.claType = claType;
     }
 
 

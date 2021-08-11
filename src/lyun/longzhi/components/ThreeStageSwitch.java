@@ -15,6 +15,8 @@ public class ThreeStageSwitch implements Component{
 
     private Color borderColor = new Color(170,170,170);
 
+    private TimeAxis timeAxis;
+
     public ThreeStageSwitch(int x,int y){
         this.x = x;
         this.y = y;
@@ -115,8 +117,10 @@ public class ThreeStageSwitch implements Component{
 
     @Override
     public void mouseClick(int x, int y) {
+        if (!enable)return;
         int check = x/48;
         if (!slide)slideTo(check);
+        if (timeAxis != null)timeAxis.setClaType(check);
     }
 
     @Override
@@ -126,32 +130,34 @@ public class ThreeStageSwitch implements Component{
 
     @Override
     public void mouseLeave() {
+        if (!enable)return;
         Main.mainFrame.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
 
     @Override
     public void mouseMove(int x, int y) {
+        if (!enable)return;
         Main.mainFrame.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 
     @Override
     public void mouseDoubleClick(int x, int y) {
-
+        if (!enable)return;
     }
 
     @Override
     public void mousePress(int x, int y) {
-
+        if (!enable)return;
     }
 
     @Override
     public void mouseRelease() {
-
+        if (!enable)return;
     }
 
     @Override
     public void mouseWheelMoved(int wheel) {
-
+        if (!enable)return;
     }
 
     //滑动动画
@@ -195,5 +201,9 @@ public class ThreeStageSwitch implements Component{
                 e.printStackTrace();
             }
         }).start();
+    }
+
+    public void connect(TimeAxis timeAxis){
+        this.timeAxis = timeAxis;
     }
 }

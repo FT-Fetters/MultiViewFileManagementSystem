@@ -27,6 +27,8 @@ public class PathSelector implements Component{
 
     private JFileChooser jFileChooser;
 
+    private TimeAxis timeAxis;
+
     public PathSelector(String path,int x,int y){
         this.path = path;
         this.x = x;
@@ -259,9 +261,10 @@ public class PathSelector implements Component{
         this.path = path;
     }
 
-    public void connect(FileListColumn fileListColumn,TextLabel textLabel,TypeClassifier typeClassifier){
+    public void connect(FileListColumn fileListColumn,TextLabel textLabel,TypeClassifier typeClassifier,TimeAxis timeAxis){
         this.fileListColumn = fileListColumn;
         this.textLabel = textLabel;
         this.typeClassifier = typeClassifier;
+        this.timeAxis = timeAxis;
     }
 }

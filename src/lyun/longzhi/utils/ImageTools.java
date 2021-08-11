@@ -1,8 +1,11 @@
 package lyun.longzhi.utils;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.Stack;
 
 public class ImageTools {
     public static BufferedImage toBufferedImage(Image image, boolean isAlpha) {
@@ -37,5 +40,18 @@ public class ImageTools {
         g.drawImage(image, 0, 0, null);
         g.dispose();
         return bimage;
+    }
+
+    /**
+     * 获取小图标
+     * @param f 要获取的文件
+     * @return 图标
+     */
+    public static Icon getSmallIcon(File f) {
+        if (f != null && f.exists()) {
+            FileSystemView fsv = FileSystemView.getFileSystemView();
+            return fsv.getSystemIcon(f);
+        }
+        return null;
     }
 }
