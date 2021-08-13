@@ -120,7 +120,7 @@ public class ThreeStageSwitch implements Component{
         if (!enable)return;
         int check = x/48;
         if (!slide)slideTo(check);
-        if (timeAxis != null)timeAxis.setClaType(check);
+        if (timeAxis != null){timeAxis.setClaType(check);}
     }
 
     @Override

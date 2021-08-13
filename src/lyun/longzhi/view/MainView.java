@@ -72,6 +72,7 @@ public class MainView extends JPanel implements Runnable {
         fileListColumn.connect(textLabel,selector,typeClassifier,timeAxis);
         selector.connect(fileListColumn,textLabel,typeClassifier,timeAxis);
         threeStageSwitch.connect(timeAxis);
+        timeAxis.connect(fileListColumn,textLabel,selector,typeClassifier,nav);
 
         componentList.add(fileListColumn);
         componentList.add(textLabel);

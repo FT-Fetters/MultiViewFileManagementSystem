@@ -23,6 +23,9 @@ public class TimeAxis implements Component{
     private int width,height;
     private int selectedTime = 0;
     private int moveState = 0;
+    private int roller = 0;
+    private int choose = -1;
+    private int mouseIn = -1;
 
     private boolean enable = true;
     private boolean move = false;
@@ -33,6 +36,12 @@ public class TimeAxis implements Component{
     private TreeMap<String,List<Map.Entry<File, Image>>> yearMap = new TreeMap<>();
     private TreeMap<String,List<Map.Entry<File, Image>>> monthMap = new TreeMap<>();
     private TreeMap<String,List<Map.Entry<File, Image>>> dayMap = new TreeMap<>();
+
+    private FileListColumn fileListColumn;
+    private TextLabel textLabel;
+    private PathSelector pathSelector;
+    private TypeClassifier typeClassifier;
+    private NavigationBar navigationBar;
 
     public TimeAxis(int x,int y,int width,int height,String path){
         this.x = x;
@@ -128,12 +137,22 @@ public class TimeAxis implements Component{
             g2d.setColor(new Color(43,43,43));
             g2d.setStroke(new BasicStroke(1.5f));
             g2d.drawLine(this.x,this.y+50,this.x + this.width,this.y + 50);
+            if (selectedTime >= curSet.length)return;
+            //draw file
+            drawFiles(g2d, cur.get(curSet[selectedTime]));
+            //绘制滚动条
+            g.setColor(new Color(77,77,77));
+            int tl = cur.get(curSet[selectedTime]).size();
+            if (tl > 15)g.fillRect(this.x+10+this.width-20,this.y + 50 +roller*(this.height-50)/tl,10,(this.height - 50)*15/tl);
         }
     }
 
     @Override
     public void mouseClick(int x, int y) {
         if (!enable)return;
+        if (x > 10 && x < this.width-20 && y > 10+50 && y < this.height - 10){
+            choose = ((y - 50)-10)/30 + roller;
+        }
     }
 
     @Override
@@ -149,11 +168,48 @@ public class TimeAxis implements Component{
     @Override
     public void mouseMove(int x, int y) {
         if (!enable)return;
+        if (x > 10 && x < this.width-20 && y > 10 + 50 && y < this.height - 10){
+            mouseIn = ((y - 50)-10)/30;
+        }
     }
 
     @Override
     public void mouseDoubleClick(int x, int y) throws IOException {
         if (!enable)return;
+        if (x > 10 && x < this.width-20 && y > 10 + 50 && y < this.height - 10){
+            TreeMap<String,List<Map.Entry<File, Image>>> cur = claType > 0 ? (claType > 1 ? dayMap:monthMap):yearMap;
+            String[] curSet = new String[cur.size()];
+            int i = 0;
+            for (String s : cur.keySet()) {
+                curSet[i] = s;
+                i++;
+            }
+            int tl = cur.get(curSet[selectedTime]).size();
+            int tmp = ((y-50)-10)/30 + roller;
+            System.out.println(tmp);
+            if (((y-50)-10)/30 > tl - roller)return;
+            File file = cur.get(curSet[selectedTime]).get(tmp).getKey();
+            if (file.isDirectory()){
+                String newPath = file.getPath();
+                if (pathSelector != null){
+                    pathSelector.enterNewPath(newPath);
+                }
+                if (textLabel != null){
+                    textLabel.text = newPath;
+                }
+                if (typeClassifier != null)typeClassifier.setPath(newPath);
+                if (fileListColumn != null)fileListColumn.setPath(newPath);
+                if (navigationBar != null)navigationBar.mouseClick(0,0);//模拟切换
+                this.setPath(newPath);
+                this.choose = -1;
+                this.roller = 0;
+            }else{
+                String newPath = file.getPath();
+                if (pathSelector != null){
+                    Runtime.getRuntime().exec(new String[]{ "cmd", "/c", newPath});
+                }
+            }
+        }
     }
 
     @Override
@@ -170,10 +226,34 @@ public class TimeAxis implements Component{
     public void mouseWheelMoved(int wheel) {
         if (!enable)return;
         if (move)return;
-        if (wheel == 1 && selectedTime > 0){//to right
-            timeSwitch(false);
-        }else if (wheel == -1 && selectedTime < (claType > 0 ? (claType > 1 ? dayMap:monthMap):yearMap).size() - 1){//to left
-            timeSwitch(true);
+        TreeMap<String,List<Map.Entry<File, Image>>> cur = claType > 0 ? (claType > 1 ? dayMap:monthMap):yearMap;
+        String[] curSet = new String[cur.size()];
+        int i = 0;
+        for (String s : cur.keySet()) {
+            curSet[i] = s;
+            i++;
+        }
+        int tl = cur.get(curSet[selectedTime]).size();
+        if (wheel == 1){//down
+            if (roller == Math.max(tl - 15, 0) && selectedTime < (claType > 0 ? (claType > 1 ? dayMap:monthMap):yearMap).size() - 1){
+                timeSwitch(true);
+                this.choose = -1;
+                this.roller = 0;
+                this.mouseIn = -1;
+            }else if (roller < Math.max(tl - 15, 0)){
+                roller++;
+            }
+
+        }else if (wheel == -1){//up
+            if (roller == 0 && selectedTime > 0){
+                timeSwitch(false);
+                this.choose = -1;
+                this.roller = 0;
+                this.mouseIn = -1;
+            }else if (roller > 0){
+                roller--;
+            }
+
         }
     }
 
@@ -182,8 +262,9 @@ public class TimeAxis implements Component{
      * @param path 路径
      */
     public void setPath(String path){
+        loading = true;
         Runnable runnable = () -> {
-            loading = true;
+            selectedTime = 0;
             this.yearMap = SortByTime.sortByYear(path);
             this.monthMap = SortByTime.sortByMonth(path);
             this.dayMap = SortByTime.sortByDay(path);
@@ -197,6 +278,7 @@ public class TimeAxis implements Component{
     }
 
     private void normalDrawTime(Graphics2D g2d,String[] curSet){
+        if (curSet.length == 0)return;
         g2d.setColor(Color.white);
         Font font = new Font("微软雅黑", Font.PLAIN, 18);
         g2d.setFont(font);
@@ -275,7 +357,43 @@ public class TimeAxis implements Component{
 
     public void setClaType(int claType){
         this.claType = claType;
+        this.selectedTime = 0;
     }
 
+    private void drawFiles(Graphics2D g2d, List<Map.Entry<File,Image>> files){
+        int baseX = this.x;
+        int baseY = this.y + 50;
+        final int maxShow = 15;
+        //绘制被选择的行
+        g2d.setColor(new Color(119,119,119));
+        if (choose != -1  && choose >= roller && choose<roller+maxShow && ((files.size() - maxShow) >= 0 || files.size() > choose))
+            g2d.fillRoundRect(baseX + 10,baseY + 30 + 30*(choose - roller) - 20,this.width-20,30,3,3);
+
+        //绘制鼠标经过
+        g2d.setColor(new Color(51,51,51));
+        if (this.mouseIn > -1 && this.mouseIn != (choose-roller) && ((files.size() - maxShow) >= 0 || files.size() > mouseIn))
+            g2d.fillRoundRect(baseX + 10,baseY + 30+30*mouseIn-20,this.width-20,30,3,3);
+
+        for (int i = roller; i < Math.min(roller + maxShow, files.size()); i++){
+            File file = files.get(i).getKey();
+            Image icon = files.get(i).getValue();
+            Font font = new Font("微软雅黑",Font.PLAIN,15);
+            g2d.setFont(font);
+            g2d.setColor(Color.white);
+            g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);//增加抗锯齿
+            //绘制文件名
+            g2d.drawString(file.getName(),baseX + 40,baseY + 30 +(i - roller)*30);
+            //绘制图标
+            g2d.drawImage(icon,baseX + 20,baseY + 15 + (i -roller)*30,null);
+        }
+    }
+
+    public void connect(FileListColumn fileListColumn,TextLabel textLabel,PathSelector pathSelector,TypeClassifier typeClassifier,NavigationBar navigationBar){
+        this.fileListColumn = fileListColumn;
+        this.textLabel = textLabel;
+        this.pathSelector = pathSelector;
+        this.typeClassifier = typeClassifier;
+        this.navigationBar = navigationBar;
+    }
 
 }

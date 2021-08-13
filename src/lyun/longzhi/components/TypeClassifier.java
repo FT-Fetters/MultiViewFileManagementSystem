@@ -2,6 +2,7 @@ package lyun.longzhi.components;
 
 import lyun.longzhi.Main;
 import lyun.longzhi.utils.DetermineFileType;
+import lyun.longzhi.utils.FontUtils;
 import lyun.longzhi.utils.RectangleOperation;
 
 import javax.swing.*;
@@ -172,6 +173,13 @@ public class TypeClassifier implements Component{
     }
 
     private void drawFiles(Graphics2D g2d, List<File> files, Image icon) {
+        if (files.size() == 0){
+            String s = "未发现该类型文件";
+            Font font = new Font("微软雅黑",Font.PLAIN,15);
+            g2d.setColor(Color.white);
+            g2d.setFont(font);
+            g2d.drawString(s,this.x + this.width/2 - FontUtils.getWordWidth(font,s)/2,this.y+FontUtils.getWordHeight(font) + 5 + 60);
+        }
         if (mouseMoveX != -1 && mouseMoveY != -1){
             g2d.setColor(Color.gray);
             if (files.size() > page*40 + mouseMoveY*10 + mouseMoveX)
