@@ -223,6 +223,7 @@ public class PathSelector implements Component{
             if (textLabel != null)textLabel.text = path;
             if (fileListColumn != null)fileListColumn.setPath(path);
             if (typeClassifier != null)typeClassifier.setPath(path);
+            if (timeAxis != null)timeAxis.setPath(path);
         }
     }
 
@@ -233,6 +234,7 @@ public class PathSelector implements Component{
             if (textLabel != null)textLabel.text = path;
             if (fileListColumn != null)fileListColumn.setPath(path);
             if (typeClassifier != null)typeClassifier.setPath(path);
+            if (timeAxis != null)timeAxis.setPath(path);
         }
     }
 
@@ -250,6 +252,7 @@ public class PathSelector implements Component{
             if (textLabel != null)textLabel.text = path;
             if (fileListColumn != null)fileListColumn.setPath(path);
             if (typeClassifier != null)typeClassifier.setPath(path);
+            if (timeAxis != null)timeAxis.setPath(path);
         }
         this.prePaths.clear();
         this.sufPaths.clear();

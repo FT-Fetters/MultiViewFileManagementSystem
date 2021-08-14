@@ -103,7 +103,7 @@ public class ThreeStageSwitch implements Component{
         g2d.setColor(borderColor);
         g2d.drawRect(this.x,this.y,this.width,this.height);
         //checked
-        g2d.setColor(new Color(51,51,51));
+        g2d.setColor(new Color(65,65,65));
         if (slide){
             g2d.fillRect(this.x + 48*checked + slideRatio,this.y + 1,48-2,this.height-2);
         }else g2d.fillRect(this.x + 1 + 48*checked,this.y + 1,48 -2,this.height - 2);

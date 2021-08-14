@@ -137,6 +137,13 @@ public class TimeAxis implements Component{
             g2d.setColor(new Color(43,43,43));
             g2d.setStroke(new BasicStroke(1.5f));
             g2d.drawLine(this.x,this.y+50,this.x + this.width,this.y + 50);
+            if (cur.size() == 0){
+                g2d.setColor(Color.white);
+                Font font = new Font("微软雅黑",Font.PLAIN,15);
+                g2d.setFont(font);
+                g2d.drawString("此文件夹为空",this.x + this.width/2 - FontUtils.getWordWidth(font,"此文件夹为空")/2,this.y + 20 + 50);
+                return;
+            }
             if (selectedTime >= curSet.length)return;
             //draw file
             drawFiles(g2d, cur.get(curSet[selectedTime]));
@@ -263,6 +270,10 @@ public class TimeAxis implements Component{
      */
     public void setPath(String path){
         loading = true;
+        roller = 0;
+        selectedTime = 0;
+        choose = -1;
+        mouseIn = -1;
         Runnable runnable = () -> {
             selectedTime = 0;
             this.yearMap = SortByTime.sortByYear(path);
@@ -358,6 +369,9 @@ public class TimeAxis implements Component{
     public void setClaType(int claType){
         this.claType = claType;
         this.selectedTime = 0;
+        this.roller = 0;
+        this.mouseIn = -1;
+        this.choose = -1;
     }
 
     private void drawFiles(Graphics2D g2d, List<Map.Entry<File,Image>> files){
