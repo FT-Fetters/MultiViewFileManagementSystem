@@ -9,6 +9,7 @@ import lyun.longzhi.utils.RectangleOperation;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class MainView extends JPanel implements Runnable {
     private final List<Component> componentList = new ArrayList<>();
 
     private String path = "D:\\";
+
 
 
     /**
@@ -208,6 +210,10 @@ public class MainView extends JPanel implements Runnable {
         for (Component component : componentList) {
             component.draw(g);
         }
+    }
+
+    public List<Component> getComponentList(){
+        return this.componentList;
     }
 
 

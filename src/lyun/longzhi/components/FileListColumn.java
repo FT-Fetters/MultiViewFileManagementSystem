@@ -281,4 +281,12 @@ public class FileListColumn implements Component{
         this.typeClassifier = typeClassifier;
         this.timeAxis = timeAxis;
     }
+
+    public List<File> getFiles(){
+        return this.files;
+    }
+
+    public String getPath(){
+        return this.path;
+    }
 }

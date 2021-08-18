@@ -14,11 +14,12 @@ public class Main {
 
     public static MainView mainView;
     public static JFrame mainFrame = new JFrame("多视图文件管理系统");
+    public static boolean connectWeb = false;
 
     public static void main(String[] args) {
         LoadConfigure.loading();
         initMainView();
-
+        loadThread();
     }
 
     /**
@@ -36,4 +37,12 @@ public class Main {
         mainViewThread.start();
         mainFrame.add(mainView);
     }
+
+    static void loadThread(){
+        ThreadPool.setAllThread();
+        for (Thread thread : ThreadPool.threads) {
+            thread.start();
+        }
+    }
+
 }
