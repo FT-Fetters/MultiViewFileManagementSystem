@@ -2,6 +2,7 @@ package lyun.longzhi;
 
 import lyun.longzhi.components.FileListColumn;
 import lyun.longzhi.utils.ElectronTools;
+import lyun.longzhi.utils.MessageBox;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +32,19 @@ public class ThreadPool {
             }
         });
         threads.add(webThread);
+
+        //消息队列线程
+        Thread messageThread = new Thread(() -> {
+            while (true){
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                MessageBox.messageHandle();
+            }
+        });
+        threads.add(messageThread);
     }
 
 }

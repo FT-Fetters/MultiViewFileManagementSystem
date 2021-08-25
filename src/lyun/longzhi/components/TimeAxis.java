@@ -225,7 +225,7 @@ public class TimeAxis implements Component{
     }
 
     @Override
-    public void mouseRelease() {
+    public void mouseRelease(int x, int y) {
         if (!enable)return;
     }
 

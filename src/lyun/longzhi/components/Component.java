@@ -111,7 +111,7 @@ public interface Component {
     /**
      * 鼠标释放事件
      */
-    void mouseRelease();
+    void mouseRelease(int x,int y);
 
     /**
      * 鼠标滚轮滑动事件

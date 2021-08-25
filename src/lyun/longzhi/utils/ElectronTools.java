@@ -1,6 +1,7 @@
 package lyun.longzhi.utils;
 
 import com.alibaba.fastjson.JSONObject;
+import lyun.longzhi.Main;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -14,30 +15,43 @@ public class ElectronTools {
     static String signal;
 
     public static boolean connect() throws IOException {
-        JSONObject res = urlConnect("http://127.0.0.1:8080/appConnect");
+        JSONObject res = urlConnect("http://ldqc.xyz:7555/appConnect");
         if (res != null && res.containsKey("signal")){
             signal = res.getString("signal");
             connected = true;
+            Main.connectWeb = true;
             return true;
-        }else return false;
+        }else{Main.connectWeb = false; return false;}
     }
 
     public static boolean shock(List<File> files,String path) throws IOException {
         if (signal == null || signal.equals(""))return false;
-        String url = "http://127.0.0.1:8080/shock?";
+        String url = "http://ldqc.xyz:7555/shock?";
         url += "signal="+signal+"&";
         StringBuilder filesStr = new StringBuilder();
         for (int i = 0; i < files.size(); i++) {
             if (i==0) filesStr.append(files.get(i).getName());
             else filesStr.append("/").append(files.get(i).getName());
         }
-        url += "files=" + filesStr + "&";
-        url += "path=" + path;
+
+        url += "files=" + string2Unicode(filesStr.toString()) + "&";
+        url += "path=" + string2Unicode(path);
         JSONObject res = urlConnect(url);
         if (res != null){
+            System.out.println(res.getString("commands"));
             return res.getBoolean("alive");
         }
         return false;
+    }
+
+    public static void disConnect(){
+        String url = "http://ldqc.xyz:7555/appDisconnect?signal=" + signal;
+        try {
+            urlConnect(url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Main.connectWeb = false;
     }
 
     private static JSONObject urlConnect(String urlStr) throws IOException {
@@ -65,6 +79,27 @@ public class ElectronTools {
             connection.disconnect();
         }
         return res;
+    }
+
+    /**
+     * 字符串转换unicode
+     * @param string 要转化的字符串
+     * @return unicode string
+     */
+    public static String string2Unicode(String string) {
+        StringBuilder unicode = new StringBuilder();
+        for (int i = 0; i < string.length(); i++) {
+            // 取出每一个字符
+            char c = string.charAt(i);
+            // 转换为unicode
+            unicode.append("/u").append(Integer.toHexString(c));
+        }
+
+        return unicode.toString();
+    }
+
+    public static String getSignal(){
+        return signal;
     }
 
 }

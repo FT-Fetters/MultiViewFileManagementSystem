@@ -4,10 +4,16 @@ import lyun.longzhi.Main;
 import lyun.longzhi.components.*;
 import lyun.longzhi.components.Button;
 import lyun.longzhi.components.Component;
+import lyun.longzhi.components.actions.BarAction;
+import lyun.longzhi.utils.ElectronTools;
+import lyun.longzhi.utils.MessageBox;
 import lyun.longzhi.utils.RectangleOperation;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
@@ -62,13 +68,67 @@ public class MainView extends JPanel implements Runnable {
         TimeAxis timeAxis = new TimeAxis(25,135,Main.mainFrame.getWidth() -65,520,"");
         timeAxis.setPath(path);//我也不知为何不在new完后如果不调用setpath就会报错,明明构造函数里面set了
 
+        //SettingBar
+        SettingBar settingBar1 = new SettingBar(25,95,Main.mainFrame.getWidth() -65,80,SettingBar.SWITCH,"云管理","");
+        SettingBar settingBar2 = new SettingBar(25, 95 + 80 + 5,Main.mainFrame.getWidth() -65,80,SettingBar.BUTTON,"将身份信号复制到剪切板","复制");
+        settingBar1.setBarAction(new BarAction() {
+            @Override
+            public void switchChane(boolean open) {
+                if (open){
+                    try {
+                        ElectronTools.connect();
+                        MessageBox.addMessage("已连接到服务器");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }else {
+                    ElectronTools.disConnect();
+                    MessageBox.addMessage("已断开连接");
+                }
+            }
+
+            @Override
+            public void buttonClick() {
+
+            }
+        });
+        settingBar2.setBarAction(new BarAction() {
+            @Override
+            public void switchChane(boolean open) {
+
+            }
+
+            @Override
+            public void buttonClick() {
+                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                Transferable trans = new StringSelection(ElectronTools.getSignal());
+                clipboard.setContents(trans, null);
+                MessageBox.addMessage("已复制到剪切板");
+            }
+        });
+
+
         //NavigationBar
-        Component[][] components = {{fileListColumn,selector,textLabel},{typeClassifier}, {threeStageSwitch,timeAxis},null};
-        NavigationBar nav = new NavigationBar(4,25,15,Main.mainFrame.getWidth() -65,60,components);
+        Component[][] components = {
+                {
+                    fileListColumn,selector,textLabel
+                },
+                {
+                    typeClassifier
+                },
+                {
+                    threeStageSwitch,timeAxis
+                },null,
+                {
+                    settingBar1, settingBar2
+                }
+        };
+        NavigationBar nav = new NavigationBar(5,25,15,Main.mainFrame.getWidth() -65,60,components);
         nav.addContent("文件列表");
         nav.addContent("分类图表");
         nav.addContent("时间轴图");
         nav.addContent("自定义视图");
+        nav.addContent("设置");
 
 
         fileListColumn.connect(textLabel,selector,typeClassifier,timeAxis);
@@ -83,6 +143,8 @@ public class MainView extends JPanel implements Runnable {
         componentList.add(typeClassifier);
         componentList.add(threeStageSwitch);
         componentList.add(timeAxis);
+        componentList.add(settingBar1);
+        componentList.add(settingBar2);
 
     }
 
@@ -147,7 +209,7 @@ public class MainView extends JPanel implements Runnable {
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
                 for (Component component : componentList) {
-                        component.mouseRelease();
+                        component.mouseRelease(e.getX()-component.getX(),e.getY()-component.getY());
                 }
             }
 
@@ -210,6 +272,7 @@ public class MainView extends JPanel implements Runnable {
         for (Component component : componentList) {
             component.draw(g);
         }
+        MessageBox.drawMessage(g,this.getWidth(),this.getHeight());
     }
 
     public List<Component> getComponentList(){
