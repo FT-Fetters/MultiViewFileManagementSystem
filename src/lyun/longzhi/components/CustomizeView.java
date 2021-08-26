@@ -17,7 +17,7 @@ public class CustomizeView implements Component{
     private int borderWidth;
     private Color borderColor;
 
-    private Color backgroundColor = new Color(227, 11, 11, 91);
+    private Color backgroundColor = new Color(57, 57, 57, 91);
 
     private int mouseClick;
 
@@ -106,11 +106,11 @@ public class CustomizeView implements Component{
         //画一条横线
         graphics2D.drawLine( this.x,this.y+50, this.x+Main.mainFrame.getWidth() -43,this.y+50);
         //画一条竖线
-        graphics2D.drawLine( this.x,this.y,this.x,this.y+500);
+        graphics2D.drawLine( this.x,this.y,this.x,this.y+550);
 
         //画右边的一个加号
-        graphics2D.drawLine(305,this.y+25,305+30,this.y+25);
-        graphics2D.drawLine(305+25/2,this.y+15,305+25/2,this.y+15+20);
+        graphics2D.drawLine(this.x+5,this.y+25,this.x+5+30,this.y+25);
+        graphics2D.drawLine(this.x+5+25/2,this.y+15,this.x+5+25/2,this.y+15+20);
     }
 
     @Override
