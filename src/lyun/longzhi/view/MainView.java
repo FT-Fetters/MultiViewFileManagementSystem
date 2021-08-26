@@ -68,6 +68,11 @@ public class MainView extends JPanel implements Runnable {
         TimeAxis timeAxis = new TimeAxis(25,135,Main.mainFrame.getWidth() -65,520,"");
         timeAxis.setPath(path);//我也不知为何不在new完后如果不调用setpath就会报错,明明构造函数里面set了
 
+        //CustomizeView
+        CustomizeView customizeView = new CustomizeView(25,100,Main.mainFrame.getWidth() -65,550,16);
+        //Contents
+        Contents contents = new Contents(25,100,300,550,16);
+
         //SettingBar
         SettingBar settingBar1 = new SettingBar(25,95,Main.mainFrame.getWidth() -65,80,SettingBar.SWITCH,"云管理","");
         SettingBar settingBar2 = new SettingBar(25, 95 + 80 + 5,Main.mainFrame.getWidth() -65,80,SettingBar.BUTTON,"将身份信号复制到剪切板","复制");
@@ -118,7 +123,9 @@ public class MainView extends JPanel implements Runnable {
                 },
                 {
                     threeStageSwitch,timeAxis
-                },null,
+                },{
+                    customizeView,contents
+        },
                 {
                     settingBar1, settingBar2
                 }
@@ -135,6 +142,7 @@ public class MainView extends JPanel implements Runnable {
         selector.connect(fileListColumn,textLabel,typeClassifier,timeAxis);
         threeStageSwitch.connect(timeAxis);
         timeAxis.connect(fileListColumn,textLabel,selector,typeClassifier,nav);
+        customizeView.connect(fileListColumn,textLabel,selector,typeClassifier,nav);
 
         componentList.add(fileListColumn);
         componentList.add(textLabel);
@@ -143,6 +151,8 @@ public class MainView extends JPanel implements Runnable {
         componentList.add(typeClassifier);
         componentList.add(threeStageSwitch);
         componentList.add(timeAxis);
+        componentList.add(customizeView);
+        componentList.add(contents);
         componentList.add(settingBar1);
         componentList.add(settingBar2);
 

@@ -1,29 +1,27 @@
 package lyun.longzhi.components;
 
-import lyun.longzhi.Main;
+import lyun.longzhi.utils.RectangleOperation;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
-public class CustomizeView implements Component{
+public class Contents implements Component{
     private int x;
     private int y;
     private int width;
     private int height;
     private int maxShow;
     private boolean enable = true;
-    private Color backgroundColor = new Color(57, 56, 56, 91);
-
-    private int mouseClick;
-
+    private Color backgroundColor = new Color(165, 163, 163, 17);
 
     private FileListColumn fileListColumn;
     private TextLabel textLabel;
     private PathSelector pathSelector;
     private TypeClassifier typeClassifier;
     private NavigationBar navigationBar;
-    public CustomizeView( int x, int y, int width, int height, int maxShow){
+
+    public Contents( int x, int y, int width, int height, int maxShow){
         this.x = x;
         this.y = y;
         this.width = width;
@@ -96,21 +94,27 @@ public class CustomizeView implements Component{
         Graphics2D graphics2D = (Graphics2D) g;
         g.setColor(backgroundColor);
         g.fillRect(this.x,this.y,this.width,this.height);
-        graphics2D.setColor(new Color(135, 133, 133, 92));
+        //graphics2D.setColor(new Color(97, 94, 94, 188));
         graphics2D.setStroke(new BasicStroke(2f));
         //画一条横线
-        graphics2D.drawLine(this.x+300 ,this.y+50, Main.mainFrame.getWidth() -43,this.y+50);
-        //画一条竖线
-        graphics2D.drawLine(this.x+300 ,this.y,this.x+300,this.y+550);
+        graphics2D.drawLine(this.x,this.y+50,this.x+300,this.y+50);
 
-        //画右边的一个加号
-        graphics2D.drawLine(this.x+305,this.y+25,this.x+305+25,this.y+25);
-        graphics2D.drawLine(this.x+305+25/2,this.y+15,this.x+305+25/2,this.y+15+20);
+        //画左边的一个加号
+
+        graphics2D.setColor(new Color(97, 94, 94, 188));
+        graphics2D.drawLine(this.x+5,this.y+25,this.x+5+25,this.y+25);
+        graphics2D.drawLine(this.x+5+25/2,this.y+15,this.x+5+25/2,this.y+15+20);
+
+
     }
 
     @Override
     public void mouseClick(int x, int y) {
-        
+        if (!enable)return;
+        System.out.println("6666");
+        if(RectangleOperation.pointInRectangle(x,y,0,15,30,15+20)){
+            System.out.println("999");
+        }
     }
 
     @Override
@@ -125,7 +129,6 @@ public class CustomizeView implements Component{
 
     @Override
     public void mouseMove(int x, int y) {
-
     }
 
     @Override
@@ -154,24 +157,4 @@ public class CustomizeView implements Component{
         this.typeClassifier = typeClassifier;
         this.navigationBar = navigationBar;
     }
-    //生成树形结构的方法，递归调用printFile（）时，参数level为0
-    public static void printFile(String path, int lever){
-        File f = new File(path);
-        for(int i=0;i<lever;i++){
-            System.out.print("   ");
-        }
-        System.out.println(f.getName());
-        if(f.isFile()){
-            return ;
-        }else{
-            String[] s=f.list();
-            for(int i=0;i<s.length;i++){
-                String path1;
-                path1 = f.getPath()+File.separator+s[i];
-                printFile(path1,lever+1);
-            }
-        }
-        return ;
-    }
-
 }

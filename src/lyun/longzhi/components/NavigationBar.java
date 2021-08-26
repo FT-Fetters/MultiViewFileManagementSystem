@@ -126,7 +126,7 @@ public class NavigationBar implements Component {
         if (border){g2d.setColor(this.borderColor);g2d.setStroke(new BasicStroke(0.8f));g2d.drawLine(0,this.y + height,Integer.MAX_VALUE,this.y+height);}
 
         if (mouseIn != -1 && mouseIn != choose){
-            g2d.setColor(new Color(51,51,51));
+            g2d.setColor(new Color(51, 51, 51));
             g2d.fillRect(
                     this.x + mouseIn * singleContentWidth + singleContentWidth/3,
                     this.y + this.height - this.height /10,singleContentWidth/3,
@@ -134,7 +134,7 @@ public class NavigationBar implements Component {
         }
 
         if (choose != -1){
-            g2d.setColor(new Color(119,119,119));
+            g2d.setColor(new Color(119, 119, 119));
             g2d.fillRect(
                     this.x + choose * singleContentWidth + singleContentWidth/3,
                     this.y + this.height - this.height /10,singleContentWidth/3,
