@@ -3,6 +3,7 @@
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/src/lib/commons-codec-1.15.jar!/" />
       <root url="jar://$PROJECT_DIR$/src/lib/fastjson-1.2.78.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/lib/commons-io-2.4.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

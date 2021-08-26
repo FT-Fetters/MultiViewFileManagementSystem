@@ -216,7 +216,7 @@ public class PathSelector implements Component{
 
     }
 
-    private void backOff(){
+    public void backOff(){
         if (!prePaths.isEmpty()){
             sufPaths.push(path);
             path = prePaths.pop();
@@ -227,7 +227,7 @@ public class PathSelector implements Component{
         }
     }
 
-    private void forward(){
+    public void forward(){
         if (!sufPaths.isEmpty()){
             prePaths.push(path);
             path = sufPaths.pop();
@@ -249,13 +249,21 @@ public class PathSelector implements Component{
         if (flag == JFileChooser.APPROVE_OPTION){
             tmp = jFileChooser.getSelectedFile();
             path = tmp.getPath();
-            if (textLabel != null)textLabel.text = path;
-            if (fileListColumn != null)fileListColumn.setPath(path);
-            if (typeClassifier != null)typeClassifier.setPath(path);
-            if (timeAxis != null)timeAxis.setPath(path);
+            openFolder(path,true);
         }
-        this.prePaths.clear();
-        this.sufPaths.clear();
+    }
+
+    public void openFolder(String path,boolean clean){
+        if (textLabel != null)textLabel.text = path;
+        if (fileListColumn != null)fileListColumn.setPath(path);
+        if (typeClassifier != null)typeClassifier.setPath(path);
+        if (timeAxis != null)timeAxis.setPath(path);
+        if (clean){
+            this.prePaths.clear();
+            this.sufPaths.clear();
+        }else{
+            enterNewPath(path);
+        }
     }
 
     public void enterNewPath(String path){
@@ -270,4 +278,6 @@ public class PathSelector implements Component{
         this.typeClassifier = typeClassifier;
         this.timeAxis = timeAxis;
     }
+
+    public String getPath(){return this.path;}
 }

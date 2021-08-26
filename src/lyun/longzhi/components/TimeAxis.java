@@ -194,7 +194,7 @@ public class TimeAxis implements Component{
             int tl = cur.get(curSet[selectedTime]).size();
             int tmp = ((y-50)-10)/30 + roller;
             System.out.println(tmp);
-            if (((y-50)-10)/30 > tl - roller)return;
+            if (((y-50)-10)/30 >= tl - roller)return;
             File file = cur.get(curSet[selectedTime]).get(tmp).getKey();
             if (file.isDirectory()){
                 String newPath = file.getPath();
