@@ -13,7 +13,11 @@ public class CustomizeView implements Component{
     private int height;
     private int maxShow;
     private boolean enable = true;
-    private Color backgroundColor = new Color(57, 56, 56, 91);
+    private boolean border = true;
+    private int borderWidth;
+    private Color borderColor;
+
+    private Color backgroundColor = new Color(227, 11, 11, 91);
 
     private int mouseClick;
 
@@ -42,42 +46,43 @@ public class CustomizeView implements Component{
 
     @Override
     public int getWidth() {
-        return 0;
+        return this.width;
     }
 
     @Override
     public int getHeight() {
-        return 0;
+        return this.height;
     }
 
     @Override
     public int getX() {
-        return 0;
+        return this.x;
     }
 
     @Override
     public int getY() {
-        return 0;
+        return this.y;
     }
 
     @Override
     public void setX(int x) {
-
+        this.x = x;
     }
 
     @Override
     public void setY(int y) {
-
+        this.y = y;
     }
 
     @Override
     public void setBorder(Color color, int width) {
-
+        this.borderWidth = width;
+        this.borderColor = color;
     }
 
     @Override
     public void removeBorder() {
-
+        this.border = false;
     }
 
     @Override
@@ -99,17 +104,19 @@ public class CustomizeView implements Component{
         graphics2D.setColor(new Color(135, 133, 133, 92));
         graphics2D.setStroke(new BasicStroke(2f));
         //画一条横线
-        graphics2D.drawLine(this.x+300 ,this.y+50, Main.mainFrame.getWidth() -43,this.y+50);
+        graphics2D.drawLine( this.x,this.y+50, this.x+Main.mainFrame.getWidth() -43,this.y+50);
         //画一条竖线
-        graphics2D.drawLine(this.x+300 ,this.y,this.x+300,this.y+550);
+        graphics2D.drawLine( this.x,this.y,this.x,this.y+500);
 
         //画右边的一个加号
-        graphics2D.drawLine(this.x+305,this.y+25,this.x+305+25,this.y+25);
-        graphics2D.drawLine(this.x+305+25/2,this.y+15,this.x+305+25/2,this.y+15+20);
+        graphics2D.drawLine(305,this.y+25,305+30,this.y+25);
+        graphics2D.drawLine(305+25/2,this.y+15,305+25/2,this.y+15+20);
     }
 
     @Override
     public void mouseClick(int x, int y) {
+        if (!enable)return;
+        System.out.println("6666");
         
     }
 

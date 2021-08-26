@@ -13,8 +13,10 @@ public class Contents implements Component{
     private int height;
     private int maxShow;
     private boolean enable = true;
+    private boolean border = true;
     private Color backgroundColor = new Color(165, 163, 163, 17);
-
+    private int borderWidth;
+    private Color borderColor;
     private FileListColumn fileListColumn;
     private TextLabel textLabel;
     private PathSelector pathSelector;
@@ -40,42 +42,43 @@ public class Contents implements Component{
 
     @Override
     public int getWidth() {
-        return 0;
+        return this.width;
     }
 
     @Override
     public int getHeight() {
-        return 0;
+        return this.height;
     }
 
     @Override
     public int getX() {
-        return 0;
+        return this.x;
     }
 
     @Override
     public int getY() {
-        return 0;
+        return this.y;
     }
 
     @Override
     public void setX(int x) {
-
+        this.x = x;
     }
 
     @Override
     public void setY(int y) {
-
+        this.y = y;
     }
 
     @Override
     public void setBorder(Color color, int width) {
-
+        this.borderWidth = width;
+        this.borderColor = color;
     }
 
     @Override
     public void removeBorder() {
-
+        this.border = false;
     }
 
     @Override

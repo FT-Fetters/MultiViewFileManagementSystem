@@ -29,7 +29,7 @@ public class MainView extends JPanel implements Runnable {
     //用于存放控件列表
     private final List<Component> componentList = new ArrayList<>();
 
-    private String path = "D:\\";
+    private String path = "E:\\DMH";
 
 
 
@@ -69,7 +69,7 @@ public class MainView extends JPanel implements Runnable {
         timeAxis.setPath(path);//我也不知为何不在new完后如果不调用setpath就会报错,明明构造函数里面set了
 
         //CustomizeView
-        CustomizeView customizeView = new CustomizeView(25,100,Main.mainFrame.getWidth() -65,550,16);
+        CustomizeView customizeView = new CustomizeView(25+300,100,Main.mainFrame.getWidth() -65,550,16);
         //Contents
         Contents contents = new Contents(25,100,300,550,16);
 
