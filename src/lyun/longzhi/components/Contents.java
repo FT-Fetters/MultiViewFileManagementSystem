@@ -114,8 +114,7 @@ public class Contents implements Component{
     @Override
     public void mouseClick(int x, int y) {
         if (!enable)return;
-        System.out.println("6666");
-        if(RectangleOperation.pointInRectangle(x,y,0,15,30,15+20)){
+        if(RectangleOperation.pointInRectangle(x,y,0,10,30,20+20)){
             System.out.println("999");
         }
     }
@@ -132,6 +131,7 @@ public class Contents implements Component{
 
     @Override
     public void mouseMove(int x, int y) {
+
     }
 
     @Override

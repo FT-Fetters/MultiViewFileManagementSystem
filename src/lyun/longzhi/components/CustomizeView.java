@@ -104,12 +104,12 @@ public class CustomizeView implements Component{
         graphics2D.setColor(new Color(135, 133, 133, 92));
         graphics2D.setStroke(new BasicStroke(2f));
         //画一条横线
-        graphics2D.drawLine( this.x,this.y+50, this.x+Main.mainFrame.getWidth() -43,this.y+50);
+        graphics2D.drawLine( this.x,this.y+50, this.x+Main.mainFrame.getWidth() -370,this.y+50);
         //画一条竖线
         graphics2D.drawLine( this.x,this.y,this.x,this.y+550);
 
         //画右边的一个加号
-        graphics2D.drawLine(this.x+5,this.y+25,this.x+5+30,this.y+25);
+        graphics2D.drawLine(this.x+5,this.y+25,this.x+30,this.y+25);
         graphics2D.drawLine(this.x+5+25/2,this.y+15,this.x+5+25/2,this.y+15+20);
     }
 
