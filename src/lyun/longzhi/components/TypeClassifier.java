@@ -198,7 +198,7 @@ public class TypeClassifier implements Component{
     }
 
     @Override
-    public void mouseClick(int x, int y) {
+    public void mouseClick(int x, int y,int key) {
         if (RectangleOperation.pointInRectangle(x,y, this.width - 30 - 80,0, this.width - 30,60)){
             checked = 2;page = 0;maxPage = otherFiles.size()%40 == 0 ? otherFiles.size()/40:otherFiles.size()/40+1;}
         else if (RectangleOperation.pointInRectangle(x,y,this.width - 30 - 80 - 25 - 80,0,this.width - 30 - 80 - 25,60)){
@@ -238,7 +238,7 @@ public class TypeClassifier implements Component{
     }
 
     @Override
-    public void mouseDoubleClick(int x, int y) {
+    public void mouseDoubleClick(int x, int y,int key) {
         if (!enable)return;
         if (mouseMoveX != -1 && mouseMoveY != -1){
             String newPath = null;
@@ -263,12 +263,12 @@ public class TypeClassifier implements Component{
     }
 
     @Override
-    public void mousePress(int x, int y) {
+    public void mousePress(int x, int y,int key) {
         if (!enable)return;
     }
 
     @Override
-    public void mouseRelease(int x, int y) {
+    public void mouseRelease(int x, int y,int key) {
         if (!enable)return;
     }
 

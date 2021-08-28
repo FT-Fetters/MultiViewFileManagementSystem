@@ -29,7 +29,7 @@ public class MainView extends JPanel implements Runnable {
     //用于存放控件列表
     private final List<Component> componentList = new ArrayList<>();
 
-    private String path = "E:\\DMH\\项目\\图像分类";
+    private String path = "D:\\workspace";
 
 
 
@@ -69,7 +69,7 @@ public class MainView extends JPanel implements Runnable {
         timeAxis.setPath(path);//我也不知为何不在new完后如果不调用setpath就会报错,明明构造函数里面set了
 
         //CustomizeView
-        CustomizeView customizeView = new CustomizeView(25+300,100,Main.mainFrame.getWidth() -370,550,16);
+        CustomizeView customizeView = new CustomizeView(25+300,100,Main.mainFrame.getWidth() -385,550,16);
         Contents contents = new Contents(25,100,300,550,16);
 
         //SettingBar
@@ -174,7 +174,7 @@ public class MainView extends JPanel implements Runnable {
                                 component.getY()+component.getHeight())
                         ) {
                             try {
-                                component.mouseDoubleClick(e.getX()-component.getX(),e.getY()-component.getY());
+                                component.mouseDoubleClick(e.getX()-component.getX(),e.getY()-component.getY(),0);
                             } catch (IOException ioException) {
                                 ioException.printStackTrace();
                             }
@@ -190,7 +190,20 @@ public class MainView extends JPanel implements Runnable {
                                 component.getX()+component.getWidth(),
                                 component.getY()+component.getHeight())
                         ){
-                            component.mouseClick(e.getX()-component.getX(),e.getY()-component.getY());
+                            component.mouseClick(e.getX()-component.getX(),e.getY()-component.getY(),0);
+                        }
+                    }
+                }else if (e.getClickCount() == 1 && SwingUtilities.isRightMouseButton(e)) {
+                    for (Component component : componentList) {
+                        if (RectangleOperation.pointInRectangle(
+                                e.getX(),
+                                e.getY(),
+                                component.getX(),
+                                component.getY(),
+                                component.getX() + component.getWidth(),
+                                component.getY() + component.getHeight())
+                        ) {
+                            component.mouseClick(e.getX() - component.getX(), e.getY() - component.getY(), 2);
                         }
                     }
                 }
@@ -209,7 +222,11 @@ public class MainView extends JPanel implements Runnable {
                             component.getX()+component.getWidth(),
                             component.getY()+component.getHeight())
                     ){
-                        component.mousePress(e.getX()-component.getX(),e.getY()-component.getY());
+                        if (SwingUtilities.isLeftMouseButton(e)){
+                            component.mousePress(e.getX()-component.getX(),e.getY()-component.getY(),0);
+                        }else if (SwingUtilities.isRightMouseButton(e)){
+                            component.mousePress(e.getX()-component.getX(),e.getY()-component.getY(),2);
+                        }
                     }
                 }
             }
@@ -218,7 +235,11 @@ public class MainView extends JPanel implements Runnable {
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
                 for (Component component : componentList) {
-                        component.mouseRelease(e.getX()-component.getX(),e.getY()-component.getY());
+                    if (SwingUtilities.isLeftMouseButton(e)){
+                        component.mouseRelease(e.getX()-component.getX(),e.getY()-component.getY(),0);
+                    }else if (SwingUtilities.isRightMouseButton(e)){
+                        component.mouseRelease(e.getX()-component.getX(),e.getY()-component.getY(),2);
+                    }
                 }
             }
 

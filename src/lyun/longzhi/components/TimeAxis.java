@@ -155,7 +155,7 @@ public class TimeAxis implements Component{
     }
 
     @Override
-    public void mouseClick(int x, int y) {
+    public void mouseClick(int x, int y,int key) {
         if (!enable)return;
         if (x > 10 && x < this.width-20 && y > 10+50 && y < this.height - 10){
             choose = ((y - 50)-10)/30 + roller;
@@ -181,7 +181,7 @@ public class TimeAxis implements Component{
     }
 
     @Override
-    public void mouseDoubleClick(int x, int y) throws IOException {
+    public void mouseDoubleClick(int x, int y,int key) throws IOException {
         if (!enable)return;
         if (x > 10 && x < this.width-20 && y > 10 + 50 && y < this.height - 10){
             TreeMap<String,List<Map.Entry<File, Image>>> cur = claType > 0 ? (claType > 1 ? dayMap:monthMap):yearMap;
@@ -206,7 +206,7 @@ public class TimeAxis implements Component{
                 }
                 if (typeClassifier != null)typeClassifier.setPath(newPath);
                 if (fileListColumn != null)fileListColumn.setPath(newPath);
-                if (navigationBar != null)navigationBar.mouseClick(0,0);//模拟切换
+                if (navigationBar != null)navigationBar.mouseClick(0,0,0);//模拟切换
                 this.setPath(newPath);
                 this.choose = -1;
                 this.roller = 0;
@@ -220,12 +220,12 @@ public class TimeAxis implements Component{
     }
 
     @Override
-    public void mousePress(int x, int y) {
+    public void mousePress(int x, int y,int key) {
         if (!enable)return;
     }
 
     @Override
-    public void mouseRelease(int x, int y) {
+    public void mouseRelease(int x, int y,int key) {
         if (!enable)return;
     }
 

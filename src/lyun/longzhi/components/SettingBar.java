@@ -143,7 +143,7 @@ public class SettingBar implements Component{
     }
 
     @Override
-    public void mouseClick(int x, int y) {
+    public void mouseClick(int x, int y,int key) {
 
     }
 
@@ -172,17 +172,18 @@ public class SettingBar implements Component{
     }
 
     @Override
-    public void mouseDoubleClick(int x, int y) throws IOException {
+    public void mouseDoubleClick(int x, int y,int key) throws IOException {
 
     }
 
     @Override
-    public void mousePress(int x, int y) {
+    public void mousePress(int x, int y,int key) {
 
     }
 
     @Override
-    public void mouseRelease(int x, int y) {
+    public void mouseRelease(int x, int y,int key) {
+        if (!enable)return;
         if (RectangleOperation.pointInRectangle(
                 x, y,
                 this.width - 25 - 48,
