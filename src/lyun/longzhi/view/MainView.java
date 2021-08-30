@@ -29,7 +29,7 @@ public class MainView extends JPanel implements Runnable {
     //用于存放控件列表
     private final List<Component> componentList = new ArrayList<>();
 
-    private String path = "E:\\DMH\\项目\\图像分类";
+    private String path = "E:\\DMH\\证件照";
 
 
 
@@ -69,8 +69,8 @@ public class MainView extends JPanel implements Runnable {
         timeAxis.setPath(path);//我也不知为何不在new完后如果不调用setpath就会报错,明明构造函数里面set了
 
         //CustomizeView
-        CustomizeView customizeView = new CustomizeView(25+300,100,Main.mainFrame.getWidth() -370,550,16);
-        Contents contents = new Contents(25,100,300,550,16);
+        CustomizeView customizeView = new CustomizeView(25,100,Main.mainFrame.getWidth() -70,550,16);
+        //Contents contents = new Contents(25,100,300,550,16);
 
         //SettingBar
         SettingBar settingBar1 = new SettingBar(25,95,Main.mainFrame.getWidth() -65,80,SettingBar.SWITCH,"云管理","");
@@ -123,7 +123,7 @@ public class MainView extends JPanel implements Runnable {
                 {
                     threeStageSwitch,timeAxis
                 },{
-                    customizeView,contents
+                    customizeView
         },
                 {
                     settingBar1, settingBar2
@@ -151,7 +151,7 @@ public class MainView extends JPanel implements Runnable {
         componentList.add(threeStageSwitch);
         componentList.add(timeAxis);
         componentList.add(customizeView);
-        componentList.add(contents);
+        //componentList.add(contents);
         componentList.add(settingBar1);
         componentList.add(settingBar2);
 
