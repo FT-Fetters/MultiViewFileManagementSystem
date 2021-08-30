@@ -174,7 +174,7 @@ public class MainView extends JPanel implements Runnable {
                                 component.getY()+component.getHeight())
                         ) {
                             try {
-                                component.mouseDoubleClick(e.getX()-component.getX(),e.getY()-component.getY());
+                                component.mouseDoubleClick(e.getX()-component.getX(),e.getY()-component.getY(),0);
                             } catch (IOException ioException) {
                                 ioException.printStackTrace();
                             }
@@ -190,7 +190,7 @@ public class MainView extends JPanel implements Runnable {
                                 component.getX()+component.getWidth(),
                                 component.getY()+component.getHeight())
                         ){
-                            component.mouseClick(e.getX()-component.getX(),e.getY()-component.getY());
+                            component.mouseClick(e.getX()-component.getX(),e.getY()-component.getY(),0);
                         }
                     }
                 }
@@ -209,7 +209,7 @@ public class MainView extends JPanel implements Runnable {
                             component.getX()+component.getWidth(),
                             component.getY()+component.getHeight())
                     ){
-                        component.mousePress(e.getX()-component.getX(),e.getY()-component.getY());
+                        component.mousePress(e.getX()-component.getX(),e.getY()-component.getY(),0);
                     }
                 }
             }
@@ -218,7 +218,7 @@ public class MainView extends JPanel implements Runnable {
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
                 for (Component component : componentList) {
-                        component.mouseRelease(e.getX()-component.getX(),e.getY()-component.getY());
+                        component.mouseRelease(e.getX()-component.getX(),e.getY()-component.getY(),0);
                 }
             }
 

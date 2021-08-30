@@ -14,17 +14,19 @@ public class CustomizeView implements Component{
     private int y;
     private int width;
     private int height;
-    private int maxShow;
+    private int maxShow = 360;
     private int roller = 0;//滚轮
     private boolean enable = true;
     private boolean border = true;
+    private boolean change = false;
     private int borderWidth;
     private  static int y1 = 0;
     private  static int x1 = 0;
-    private static boolean click;
+    private static int click = 0;
     private static int dclick = 0;
+    private static int size = 0;
     private File file;
-    private String filePath;
+    private String filePath = "C:\\";
     private Image fileicon;
     private Graphics g;
     private Color borderColor;
@@ -130,38 +132,66 @@ public class CustomizeView implements Component{
             graphics2D.drawLine(this.x + 300, this.y, this.x + 300, this.y + 550);
 
 
-        if (click) {
-            file = new File(filePath);
-            //绘制文件名
-            graphics2D.setColor(Color.white);
-            graphics2D.setFont(new Font("微软雅黑", Font.PLAIN, 15));
-            graphics2D.drawString(file.getName(), this.x + 40, this.y + 70);
-            //绘制图标
-            FileSystemView fsv = FileSystemView.getFileSystemView();
-            ImageIcon imageIcon = (ImageIcon) fsv.getSystemIcon(file);
-            fileicon = imageIcon.getImage();
-            graphics2D.drawImage(fileicon, this.x + 20, this.y + 55, null);
+        if (click == 1) {
+
+                file = new File(filePath);
+                //绘制文件名
+                graphics2D.setColor(Color.white);
+                graphics2D.setFont(new Font("微软雅黑", Font.PLAIN, 15));
+                graphics2D.drawString(file.getName(), this.x + 40, this.y + 70);
+                //绘制图标
+                FileSystemView fsv = FileSystemView.getFileSystemView();
+                ImageIcon imageIcon = (ImageIcon) fsv.getSystemIcon(file);
+                fileicon = imageIcon.getImage();
+                graphics2D.drawImage(fileicon, this.x + 20, this.y + 55, null);
+                changeFile(g);
         }
         if(dclick == 1){
-            //绘制滚动条
             x1 = 0 ;
             y1 = 0 ;
+            //size = 0;
             printFile(g,filePath,0);
+            //如果双击项目则展示树形结构，并且要使得右边的加号变为白色,没变白色就说明没有指明哪个项目
+            changeWhite(g);
         }
-        }
+        g.setColor(new Color(77,77,77));
+        if (size > maxShow)g.fillRect(this.x+10+this.width-15,this.y+roller*this.height/size,10,this.height*maxShow/size);
+
+    }
 
     @Override
     public void mouseClick(int x, int y, int key) {
-        if (!enable)return;
+        if (!enable) return;
         if (RectangleOperation.pointInRectangle(x, y, 0, 10, 30, 20 + 20)) {
-            JFileChooser jFileChooser = new JFileChooser("C:\\");
+            size = 0;
+            JFileChooser jFileChooser = new JFileChooser(filePath);
             jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             int returnVal = jFileChooser.showOpenDialog(jFileChooser);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 filePath = jFileChooser.getSelectedFile().getAbsolutePath();
             }
-            click = true;
+            click = 1;
             //draw(g);
+        }
+        if (change) {
+            if (RectangleOperation.pointInRectangle(x, y, 305, 10, 30 + 305, 20 + 20)) {
+                JFileChooser jFileChooser = new JFileChooser(filePath);
+                jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                int returnVal = jFileChooser.showOpenDialog(jFileChooser);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    filePath = jFileChooser.getSelectedFile().getAbsolutePath();
+                }
+            }
+        }
+        if(click == 1){
+            if (RectangleOperation.pointInRectangle(x, y, 50, 10, 50+20, 40)){
+                JFileChooser jFileChooser = new JFileChooser("C:\\");
+                jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                int returnVal = jFileChooser.showOpenDialog(jFileChooser);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    filePath = jFileChooser.getSelectedFile().getAbsolutePath();
+                }
+            }
         }
     }
 
@@ -178,8 +208,8 @@ public class CustomizeView implements Component{
     }
 
     @Override
-    public void mouseMove(int x, int y) {
-
+    public void mouseMove(int x,int y) {
+        if (!enable)return;
     }
 
     @Override
@@ -187,6 +217,7 @@ public class CustomizeView implements Component{
         if (!enable) return;
         if (RectangleOperation.pointInRectangle(x, y, 0, 50, 300,50+15 )){
             dclick = 1;
+
         }
     }
 
@@ -208,6 +239,13 @@ public class CustomizeView implements Component{
     @Override
     public void mouseWheelMoved(int wheel) {
         if (!enable)return;
+        /*if (wheel == 1){
+            if (roller < size - maxShow){
+                roller++;
+            }
+        }else if (wheel == -1){
+            if (roller > 0)roller--;
+        }*/
     }
     public void connect(FileListColumn fileListColumn,TextLabel textLabel,PathSelector pathSelector,TypeClassifier typeClassifier,NavigationBar navigationBar){
         this.fileListColumn = fileListColumn;
@@ -216,6 +254,9 @@ public class CustomizeView implements Component{
         this.typeClassifier = typeClassifier;
         this.navigationBar = navigationBar;
     }
+
+
+
     //生成树形结构的方法，递归调用printFile（）时，参数level为0
     public   void   printFile(Graphics g,String path, int lever){
 
@@ -228,6 +269,7 @@ public class CustomizeView implements Component{
 
         }
         graphics2D.drawString(f.getName(),this.x+40+300+lever,this.y+70+y1);
+        //size = size + 15;
         y1  = y1 + 20;
         if(f.isFile()){
             return ;
@@ -241,5 +283,24 @@ public class CustomizeView implements Component{
         }
         return ;
     }
+   public void changeWhite(Graphics g){
+        change = true;
+       Graphics2D graphics2D = (Graphics2D) g;
+       graphics2D.setColor(Color.white);
+       graphics2D.drawLine(this.x + 5 + 300, this.y + 25, this.x + 30 + 300, this.y + 25);
+       graphics2D.drawLine(this.x + 5 + 300 + 25 / 2, this.y + 15, this.x + 5 + 300 + 25 / 2, this.y + 15 + 20);
+   }
+
+   public void changeFile(Graphics g){
+       Graphics2D graphics2D = (Graphics2D) g;
+       graphics2D.setColor(Color.white);
+       //画一个改变的箭头
+       graphics2D.drawLine(this.x+30+20,this.y+25,this.x+50+20,this.y+25);
+       graphics2D.drawLine(this.x+30+20,this.y+25,this.x+50+5,this.y+25-5);
+       graphics2D.drawLine(this.x+30+20,this.y+25,this.x+50+5,this.y+25+5);
+       graphics2D.drawLine(this.x+50+20,this.y+25,this.x+50+15,this.y+25+5);
+       graphics2D.drawLine(this.x+50+20,this.y+25,this.x+50+15,this.y+25-5);
+   }
+
 
 }
