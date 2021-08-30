@@ -44,6 +44,7 @@ public class FileListColumn implements Component{
     private File copyFile = null;
 
     private List<File> files = new ArrayList<>();
+
     private List<Image> filesIcon = new ArrayList<>();
 
     private TextLabel textLabel;
