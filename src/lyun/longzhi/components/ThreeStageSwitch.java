@@ -116,7 +116,7 @@ public class ThreeStageSwitch implements Component{
     }
 
     @Override
-    public void mouseClick(int x, int y) {
+    public void mouseClick(int x, int y,int key) {
         if (!enable)return;
         int check = x/48;
         if (!slide)slideTo(check);
@@ -141,17 +141,17 @@ public class ThreeStageSwitch implements Component{
     }
 
     @Override
-    public void mouseDoubleClick(int x, int y) {
+    public void mouseDoubleClick(int x, int y,int key) {
         if (!enable)return;
     }
 
     @Override
-    public void mousePress(int x, int y) {
+    public void mousePress(int x, int y,int key) {
         if (!enable)return;
     }
 
     @Override
-    public void mouseRelease(int x, int y) {
+    public void mouseRelease(int x, int y,int key) {
         if (!enable)return;
     }
 

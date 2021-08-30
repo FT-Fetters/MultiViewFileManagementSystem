@@ -81,7 +81,7 @@ public interface Component {
     /**
      * 鼠标点击事件
      */
-    void mouseClick(int x,int y);
+    void mouseClick(int x,int y,int key);
 
     /**
      * 鼠标进入事件
@@ -101,17 +101,17 @@ public interface Component {
     /**
      * 鼠标双击事件
      */
-    void mouseDoubleClick(int x,int y) throws IOException;
+    void mouseDoubleClick(int x,int y,int key) throws IOException;
 
     /**
      * 鼠标按下事件
      */
-    void mousePress(int x,int y);
+    void mousePress(int x,int y,int key);
 
     /**
      * 鼠标释放事件
      */
-    void mouseRelease(int x,int y);
+    void mouseRelease(int x,int y,int key);
 
     /**
      * 鼠标滚轮滑动事件

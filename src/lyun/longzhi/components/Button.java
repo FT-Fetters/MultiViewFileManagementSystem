@@ -108,7 +108,7 @@ public class Button  implements Component{
     }
 
     @Override
-    public void mouseClick(int mouseX,int mouseY) {
+    public void mouseClick(int mouseX,int mouseY,int key) {
 
     }
 
@@ -128,18 +128,18 @@ public class Button  implements Component{
     }
 
     @Override
-    public void mouseDoubleClick(int x,int y) {
+    public void mouseDoubleClick(int x,int y,int key) {
 
     }
 
     @Override
-    public void mousePress(int x, int y) {
+    public void mousePress(int x, int y,int key) {
 
     }
 
 
     @Override
-    public void mouseRelease(int x, int y) {
+    public void mouseRelease(int x, int y,int key) {
 
     }
 
