@@ -3,10 +3,13 @@ package lyun.longzhi.components;
 import lyun.longzhi.utils.RectangleOperation;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.io.IOException;
 
-public class Contents implements Component{
+public  class Contents implements Component{
     private int x;
     private int y;
     private int width;
@@ -22,6 +25,17 @@ public class Contents implements Component{
     private PathSelector pathSelector;
     private TypeClassifier typeClassifier;
     private NavigationBar navigationBar;
+    private ScrollPane scrollPane=null;
+    private MouseWheelListener sysWheel;
+    public class event extends MouseAdapter{
+        public void mouseWheelMove(MouseWheelEvent e){
+            scrollPane.addMouseWheelListener(sysWheel);
+            sysWheel.mouseWheelMoved(e);
+            scrollPane.removeMouseWheelListener(sysWheel);
+        }
+
+    }
+
 
     public Contents( int x, int y, int width, int height, int maxShow){
         this.x = x;
@@ -115,6 +129,8 @@ public class Contents implements Component{
     public void mouseClick(int x, int y,int key) {
         if (!enable)return;
         if(RectangleOperation.pointInRectangle(x,y,0,10,30,20+20)){
+            TextEdit note=new TextEdit();
+            note.launchFrame();
             System.out.println("999");
         }
     }

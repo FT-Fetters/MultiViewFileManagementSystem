@@ -78,7 +78,6 @@ public class MainView extends JPanel implements Runnable {
         settingBar1.setBarAction(new BarAction() {
             @Override
             public void switchChane(boolean open) {
-
                 if (open){
                     try {
                         ElectronTools.connect();
@@ -105,15 +104,10 @@ public class MainView extends JPanel implements Runnable {
 
             @Override
             public void buttonClick() {
-                if (Main.connectWeb && ElectronTools.getSignal() != null){
-                    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-                    Transferable trans = new StringSelection(ElectronTools.getSignal());
-                    clipboard.setContents(trans, null);
-                    MessageBox.addMessage("已复制到剪切板");
-                }else {
-                    MessageBox.addMessage("复制失败,未连接或获取的signal为null");
-                }
-
+                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                Transferable trans = new StringSelection(ElectronTools.getSignal());
+                clipboard.setContents(trans, null);
+                MessageBox.addMessage("已复制到剪切板");
             }
         });
 
@@ -250,8 +244,6 @@ public class MainView extends JPanel implements Runnable {
                 }
             }
         });
-
-
 
         this.addMouseWheelListener(e -> {
             for (Component component : componentList) {
