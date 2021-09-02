@@ -203,6 +203,11 @@ public class NavigationBar implements Component {
         if (!enable)return;
     }
 
+    @Override
+    public void mouseDrag(int x, int y, int key) {
+
+    }
+
 
     /**
      * 添加新的内容

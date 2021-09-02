@@ -249,6 +249,26 @@ public class MainView extends JPanel implements Runnable {
                     }
                 }
             }
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                super.mouseDragged(e);
+                for (Component component : componentList) {
+                    if (RectangleOperation.pointInRectangle(
+                            e.getX(),
+                            e.getY(),
+                            component.getX(),
+                            component.getY(),
+                            component.getX()+component.getWidth(),
+                            component.getY()+component.getHeight())
+                    ){
+                        if (SwingUtilities.isLeftMouseButton(e)){
+                            component.mouseDrag(e.getX()-component.getX(),e.getY()-component.getY(),0);
+                        }else if (SwingUtilities.isRightMouseButton(e)){
+                            component.mouseDrag(e.getX()-component.getX(),e.getY()-component.getY(),2);
+                        }
+                    }
+                }
+            }
         });
 
 

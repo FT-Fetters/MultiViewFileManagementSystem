@@ -275,6 +275,11 @@ public class SettingBar implements Component{
 
     }
 
+    @Override
+    public void mouseDrag(int x, int y, int key) {
+
+    }
+
     public void setBarAction(BarAction barAction){
         this.barAction = barAction;
     }

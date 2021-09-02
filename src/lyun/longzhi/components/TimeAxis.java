@@ -264,6 +264,11 @@ public class TimeAxis implements Component{
         }
     }
 
+    @Override
+    public void mouseDrag(int x, int y, int key) {
+
+    }
+
     /**
      * 设置路径
      * @param path 路径

@@ -298,6 +298,11 @@ public class TypeClassifier implements Component{
         }
     }
 
+    @Override
+    public void mouseDrag(int x, int y, int key) {
+
+    }
+
     public void setPath(String path){
         TypeClassifier typeClassifier = this;
         Runnable tR = () -> {

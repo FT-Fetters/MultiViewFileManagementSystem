@@ -118,5 +118,5 @@ public interface Component {
      * @param wheel 1往上-1往下
      */
     void mouseWheelMoved(int wheel);
-
+    void mouseDrag(int x,int y,int key);
 }

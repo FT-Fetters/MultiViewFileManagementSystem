@@ -247,6 +247,12 @@ public class CustomizeView implements Component{
             if (roller > 0)roller--;
         }*/
     }
+
+    @Override
+    public void mouseDrag(int x, int y, int key) {
+
+    }
+
     public void connect(FileListColumn fileListColumn,TextLabel textLabel,PathSelector pathSelector,TypeClassifier typeClassifier,NavigationBar navigationBar){
         this.fileListColumn = fileListColumn;
         this.textLabel = textLabel;
