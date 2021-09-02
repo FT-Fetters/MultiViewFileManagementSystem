@@ -13,12 +13,15 @@ public class NavigationBar implements Component {
     private int capacity;
     private int mouseIn = -1;
     private int choose = 0;
+    private int slideRatio = 0;
+    private int slideTo = -1;
 
     private Color backgroundColor;
     private Color borderColor;
 
     private boolean border = true;
     private boolean enable = true;
+    private boolean slide = false;
 
     private List<String> contents = new ArrayList<>();
 
@@ -134,30 +137,32 @@ public class NavigationBar implements Component {
         }
 
         if (choose != -1){
-            g2d.setColor(new Color(119, 119, 119));
-            g2d.fillRect(
-                    this.x + choose * singleContentWidth + singleContentWidth/3,
-                    this.y + this.height - this.height /10,singleContentWidth/3,
-                    this.height/10);
+            if (slide){
+                int sub = slideTo - choose;
+                float rate = ((float) slideRatio)/100.00f;
+                float moveStepLen = ((float) singleContentWidth)*sub*rate;
+                g2d.setColor(new Color(119, 119, 119));
+                g2d.fillRect(
+                        (int) (this.x + choose * singleContentWidth + singleContentWidth / 3 + moveStepLen),
+                        this.y + this.height - this.height / 10, singleContentWidth / 3,
+                        this.height / 10);
+            }else {
+                g2d.setColor(new Color(119, 119, 119));
+                g2d.fillRect(
+                        this.x + choose * singleContentWidth + singleContentWidth / 3,
+                        this.y + this.height - this.height / 10, singleContentWidth / 3,
+                        this.height / 10);
+            }
         }
 
     }
 
     @Override
     public void mouseClick(int x, int y,int key) {
-        if (!enable)return;
+        if (!enable || slide)return;
         int singleContentWidth = width / capacity;
-        if (components[choose] != null){
-            for (Component component : components[choose]) {
-                if (component!= null)component.setEnable(false);
-            }
-        }
-        this.choose = x/singleContentWidth;
-        if (components[choose] != null){
-            for (Component component : components[choose]) {
-                if (component!= null)component.setEnable(true);
-            }
-        }
+        navSwitch(x/singleContentWidth);
+
 
     }
 
@@ -250,4 +255,40 @@ public class NavigationBar implements Component {
         FontDesignMetrics metrics = FontDesignMetrics.getMetrics(font);
         return metrics.getHeight();
     }
+
+    private void navSwitch(int to){
+        Thread thread = new Thread(() -> {
+            try {
+                this.slide = true;
+                this.slideRatio = 0;
+                this.slideTo = to;
+                for (int i = 0; i < 50; i+=2){
+                    Thread.sleep((50 - i)/4);
+                    slideRatio = i;
+                }
+                for (int i = 50; i <= 100;i+=2) {
+                    Thread.sleep((i - 50) / 4);
+                    slideRatio = i;
+                }
+
+                if (components[choose] != null){
+                    for (Component component : components[choose]) {
+                        if (component!= null)component.setEnable(false);
+                    }
+                }
+                if (components[to] != null){
+                    for (Component component : components[to]) {
+                        if (component!= null)component.setEnable(true);
+                    }
+                }
+                slide = false;
+                choose =to;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        thread.setPriority(10);
+        thread.start();
+    }
+
 }

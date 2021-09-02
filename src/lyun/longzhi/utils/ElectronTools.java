@@ -58,6 +58,7 @@ public class ElectronTools {
             e.printStackTrace();
         }
         Main.connectWeb = false;
+        signal = null;
     }
 
     private static JSONObject urlConnect(String urlStr) throws IOException {

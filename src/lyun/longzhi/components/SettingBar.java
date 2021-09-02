@@ -13,12 +13,14 @@ public class SettingBar implements Component{
     public static final int BUTTON = 1;
 
     private int x,y,width,height;
-
     private int type = -1;
+    private int backgroundChangeRate = 0;
 
     private boolean enable = true;
     private boolean switchState = false;
     private boolean mouseIn = false;
+    private boolean mouseEnter = false;
+    private boolean backgroundChange = false;
 
     private String text;
     private String typeDescribe;
@@ -107,7 +109,16 @@ public class SettingBar implements Component{
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         //background
-        Color background = new Color(43,43,43);
+        Color background;
+        if (backgroundChange){
+            background = new Color(43+backgroundChangeRate,43+backgroundChangeRate,43+backgroundChangeRate);
+        }else {
+            if (mouseEnter){
+                background = new Color(58,58,58);
+            }else {
+                background = new Color(43,43,43);
+            }
+        }
         g2d.setColor(background);
         g2d.fillRoundRect(this.x,this.y,this.width,this.height,8,8);
         //draw text
@@ -116,21 +127,34 @@ public class SettingBar implements Component{
         g2d.setFont(font);
         g2d.drawString(text,this.x + 25,this.y + this.height/2 + FontUtils.getWordHeight(font)/3);
         //Functionality
-        if (type == SWITCH){
+        if (type == SWITCH){//开关模式
             if (switchState){
                 Color border = new Color(158,158,158);
                 g2d.setColor(border);
                 g2d.fillRoundRect(this.x + this.width - 25 - 48,this.y + this.height/2 - 15,48,24,25,30);
                 g2d.setColor(Color.black);
-                g2d.fillOval(this.x + this.width - 25 - 20,this.y + this.height/2 - 11,16,16);
+                if (mouseIn){
+                    g2d.fillOval(this.x + this.width - 25 - 21,this.y + this.height/2 - 12,18,18);
+                }else {
+                    g2d.fillOval(this.x + this.width - 25 - 20,this.y + this.height/2 - 11,16,16);
+                }
             }else {
                 Color border = new Color(158,158,158);
                 g2d.setColor(border);
                 g2d.drawRoundRect(this.x + this.width - 25 - 48,this.y + this.height/2 - 15,48,24,25,30);
-                g2d.fillOval(this.x + this.width - 25 - 48 + 4,this.y + this.height/2 - 15 +4,16,16);
+                if (mouseIn){
+                    g2d.fillOval(this.x + this.width - 25 - 48 + 3,this.y + this.height/2 - 15 +3,18,18);
+                }else {
+                    g2d.fillOval(this.x + this.width - 25 - 48 + 4,this.y + this.height/2 - 15 +4,16,16);
+                }
             }
-        }else {
-            Color button = new Color(55,55,55);
+        }else {//按钮模式
+            Color button;
+            if (mouseIn){
+                button = new Color(42,42,42);
+            }else{
+                button = new Color(55,55,55);
+            }
             g2d.setColor(button);
             g2d.fillRoundRect(this.x + this.width - this.width/15 - 25,this.y + this.height*2/7,this.width/15,this.height*2/5,8,8);
             g2d.setColor(Color.white);
@@ -156,18 +180,62 @@ public class SettingBar implements Component{
     public void mouseLeave() {
         if (!enable)return;
         mouseIn = false;
+        if (mouseEnter){
+            backgroundChange = true;
+            Thread thread = new Thread(() -> {
+                try {
+                    this.backgroundChangeRate = 0;
+                    for (int i = 15; i > 0; i--) {
+                        Thread.sleep(4);
+                        this.backgroundChangeRate = i;
+                    }
+                    backgroundChange = false;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+            thread.setPriority(10);
+            thread.start();
+            mouseEnter = false;
+        }
     }
 
     @Override
     public void mouseMove(int x, int y) {
         if (!enable)return;
-        mouseIn = RectangleOperation.pointInRectangle(
+        if (RectangleOperation.pointInRectangle(
+                x, y,
+                this.width - 25 - 85,
+                this.height / 2 - 15,
+                this.width - 25,
+                this.height / 2 + 15
+        ) && type == BUTTON){
+            mouseIn = true;
+        }else mouseIn = type == SWITCH && RectangleOperation.pointInRectangle(
                 x, y,
                 this.width - 25 - 48,
                 this.height / 2 - 15,
                 this.width - 25,
                 this.height / 2 + 15
         );
+        if (!mouseEnter){
+            this.mouseEnter = true;
+            this.backgroundChange = true;
+            Thread thread = new Thread(() -> {
+                try {
+                    this.backgroundChangeRate = 0;
+                    for (int i = 0; i < 15; i++) {
+                        Thread.sleep(6);
+                        this.backgroundChangeRate = i;
+                    }
+                    backgroundChange = false;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+            thread.setPriority(10);
+            thread.start();
+        }
 
     }
 
