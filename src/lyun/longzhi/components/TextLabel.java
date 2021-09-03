@@ -170,6 +170,11 @@ public class TextLabel implements Component{
         if (!enable)return;
     }
 
+    @Override
+    public void mouseDrag(int x, int y, int key) {
+
+    }
+
     /**
      * 设置文本的字体格式
      * @param font 字体格式

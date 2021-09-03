@@ -160,6 +160,11 @@ public class ThreeStageSwitch implements Component{
         if (!enable)return;
     }
 
+    @Override
+    public void mouseDrag(int x, int y, int key) {
+
+    }
+
     //滑动动画
     private void slideTo(int to){
         new Thread(() -> {

@@ -216,6 +216,11 @@ public class PathSelector implements Component{
 
     }
 
+    @Override
+    public void mouseDrag(int x, int y, int key) {
+
+    }
+
     public void backOff(){
         if (!prePaths.isEmpty()){
             sufPaths.push(path);

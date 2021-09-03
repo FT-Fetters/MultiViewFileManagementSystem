@@ -148,4 +148,9 @@ public class Button  implements Component{
 
     }
 
+    @Override
+    public void mouseDrag(int x, int y, int key) {
+
+    }
+
 }
