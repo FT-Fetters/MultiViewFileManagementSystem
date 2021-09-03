@@ -107,6 +107,7 @@ public class ElectronTools {
 
     private static JSONObject handleCommand(String[] cmd){
         PathSelector pathSelector = (PathSelector) Main.mainView.getComponentList().get(2);
+        FileListColumn fileListColumn = (FileListColumn) Main.mainView.getComponentList().get(0);
         String path;
         JSONObject res = new JSONObject();
         switch (cmd[0]){
@@ -132,6 +133,7 @@ public class ElectronTools {
                 path = cmd[1].replace('"',' ');
                 if (new File(path).exists()){
                     boolean delete = new File(path).delete();
+                    fileListColumn.refresh();
                     if (delete)res.put("suc",true);
                         else res.put("suc",false);
                 }
@@ -160,12 +162,14 @@ public class ElectronTools {
                         }else res.put("suc",false);
                     }
                 }else res.put("suc",false);
+                fileListColumn.refresh();
                 break;
             case "rn":
                 path = cmd[1].replace('"',' ');
                 String oldName = cmd[2].replace('"',' ');
                 String newName = cmd[3].replace('"',' ');
                 renameFile(path,oldName,newName);
+                fileListColumn.refresh();
                 res.put("suc",true);
         }
         return res;
