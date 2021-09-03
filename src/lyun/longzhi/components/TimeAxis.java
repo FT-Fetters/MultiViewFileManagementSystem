@@ -240,6 +240,7 @@ public class TimeAxis implements Component{
             curSet[i] = s;
             i++;
         }
+        if (selectedTime > curSet.length - 1)return;
         int tl = cur.get(curSet[selectedTime]).size();
         if (wheel == 1){//down
             if (roller == Math.max(tl - 15, 0) && selectedTime < (claType > 0 ? (claType > 1 ? dayMap:monthMap):yearMap).size() - 1){
