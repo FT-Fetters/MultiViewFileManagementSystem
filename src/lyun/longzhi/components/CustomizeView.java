@@ -2,7 +2,10 @@ package lyun.longzhi.components;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.sun.imageio.plugins.common.ImageUtil;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import lyun.longzhi.Main;
+import lyun.longzhi.utils.ImageTools;
 import lyun.longzhi.utils.RectangleOperation;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
@@ -290,7 +293,6 @@ public class CustomizeView implements Component{
         //size = size + 15;
         y1  = y1 + 20;
         if(f.isFile()){
-            return ;
         }else{
             String[] s=f.list();
             for(int i=0;i<s.length;i++){
@@ -299,7 +301,6 @@ public class CustomizeView implements Component{
                 printFile(g,path1,lever+50);
             }
         }
-        return ;
     }
    public void changeWhite(Graphics g){
         change = true;
