@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.imageio.plugins.common.ImageUtil;
 import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
+import lyun.longzhi.Frame.NewProjectFrame;
 import lyun.longzhi.Main;
+import lyun.longzhi.configure.LoadConfigure;
 import lyun.longzhi.utils.ImageTools;
 import lyun.longzhi.utils.RectangleOperation;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -42,9 +44,8 @@ public class CustomizeView implements Component{
     private Color borderColor;
     private final HashMap<String, JSONObject> projectMap = new HashMap<>();//项目图
     private final List<File> fileList = new ArrayList<>();
-    private final List<String> filesName = new ArrayList<>();
     private final List<Image> icons = new ArrayList<>();
-    private final List<Integer> levels = new ArrayList<>();
+
 
 
     private Color backgroundColor = new Color(57, 57, 57, 91);
@@ -177,7 +178,7 @@ public class CustomizeView implements Component{
     @Override
     public void mouseClick(int x, int y, int key) {
         if (!enable) return;
-        if (RectangleOperation.pointInRectangle(x, y, 0, 10, 30, 20 + 20)) {
+/*        if (RectangleOperation.pointInRectangle(x, y, 0, 10, 30, 20 + 20)) {
             size = 0;
             JFileChooser jFileChooser = new JFileChooser(filePath);
             jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -207,7 +208,7 @@ public class CustomizeView implements Component{
                     filePath = jFileChooser.getSelectedFile().getAbsolutePath();
                 }
             }
-        }
+        }*/
     }
 
 
@@ -325,66 +326,68 @@ public class CustomizeView implements Component{
      * 新建项目
      */
     private static void newProject(){
-        JFileChooser jFileChooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "项目文件(*.udp)", "udp");
-        jFileChooser.setFileFilter(filter);
-        jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        int option = jFileChooser.showOpenDialog(null);
-        if (option == JFileChooser.APPROVE_OPTION){
-            File projectFile = jFileChooser.getSelectedFile();
-            String fileName = jFileChooser.getName(projectFile);
-            if (!fileName.endsWith(".udp")){
-                projectFile= new File(jFileChooser.getCurrentDirectory(),projectFile.getName()+".udp");
-            }
-            JSONObject initData = new JSONObject();
-            initData.put("projectName",fileName);
-            initData.put("files",new JSONArray());
-            initData.put("path",projectFile.getParent().replace("\\","/"));
-            String tmp = initData.toJSONString();
+        NewProjectFrame frame = new NewProjectFrame(Main.mainFrame);
+        String projectName = frame.getProjectName();
+        JSONObject filesJson = new JSONObject();
+        filesJson.put("files",new JSONArray());
+        File dataFile = new File(System.getProperty("user.dir") + File.separator + "data.udp");
+        if (!dataFile.exists()) {
             try {
-                FileOutputStream outputStream = new FileOutputStream(projectFile);
-                outputStream.write(tmp.getBytes(StandardCharsets.UTF_8));
-                outputStream.close();
+                if (!dataFile.createNewFile())return;
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        StringBuilder tmp = new StringBuilder();
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(dataFile));
+            String tmpStr;
+            while ((tmpStr = bufferedReader.readLine()) != null){
+                tmp.append(tmpStr);
+            }
+            bufferedReader.close();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        JSONObject data = JSONObject.parseObject(tmp.toString());
+        data.put(projectName,filesJson);
+/*        File
+        try {
+            FileOutputStream outputStream = new FileOutputStream(projectFile);
+            outputStream.write(tmp.getBytes(StandardCharsets.UTF_8));
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+
     }
 
     /**
      * 加载或添加项目
      */
     private void loadProject(){
-        JFileChooser jFileChooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "项目文件(*.udp)", "udp");
-        jFileChooser.setFileFilter(filter);
-        jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        int option = jFileChooser.showOpenDialog(null);
-        if (option == JFileChooser.APPROVE_OPTION){
-            File projectFile = jFileChooser.getSelectedFile();
-            if (projectFile.exists()){
-                StringBuilder tmp = new StringBuilder();
-                try {
-                    BufferedReader bufferedReader = new BufferedReader(new FileReader(projectFile));
-                    String tmpStr;
-                    while ((tmpStr = bufferedReader.readLine()) != null){
-                        tmp.append(tmpStr);
-                    }
-                    bufferedReader.close();
-                }catch (IOException e){
-                    e.printStackTrace();
+        File dataFile = new File(System.getProperty("user.dir") + File.separator + "data.udp");
+        if (dataFile.exists()){
+            StringBuilder tmp = new StringBuilder();
+            try {
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(dataFile));
+                String tmpStr;
+                while ((tmpStr = bufferedReader.readLine()) != null){
+                    tmp.append(tmpStr);
                 }
-                JSONObject data = JSONObject.parseObject(tmp.toString());
-                if (data.containsKey("projectName")){
-                    projectMap.put(data.getString("projectName"),data);
-                }
-            }else {
-                //文件不存在
+                bufferedReader.close();
+            }catch (IOException e){
+                e.printStackTrace();
             }
+            JSONObject data = JSONObject.parseObject(tmp.toString());
+            for (String key : data.keySet()) {
+                projectMap.put(key,data.getJSONObject(key));
+            }
+        }else {
+            //文件不存在
         }
     }
+
 
     /**
      * 切换项目
@@ -395,62 +398,29 @@ public class CustomizeView implements Component{
         if (projectMap.containsKey(projectName)){
             JSONObject project = projectMap.get(projectName);
             JSONArray files = project.getJSONArray("files");
-            fileDFS(0,files,project.getString("path"));
+            for (Object o : files) {
+                File tmpFile = new File((String) o);
+                if (tmpFile.exists()){
+                    fileList.add(tmpFile);
+                    icons.add((Image) ImageTools.getSmallIcon(tmpFile));
+                }
+            }
             return true;
         }else return false;
     }
 
-    /**
-     * 深度搜索json获取所有的文件并添加到相应的list中
-     * @param level 层级
-     * @param files 文件表
-     * @param path 项目路径
-     */
-    private void fileDFS(int level,JSONArray files,String path){
-        for (Object o : files) {
-            JSONObject file = (JSONObject) o;
-            if (file.getString("type").equals("file")){
-                fileList.add(new File(path+"/"+file.getString("md5") + "." + file.getString("suffix")));
-                filesName.add(file.getString("name")+"." + file.getString("suffix"));
-                levels.add(level);
-            }else if (file.getString("type").equals("dir")){
-                fileDFS(level+1, file.getJSONArray("contain"),path);
-            }
-        }
-    }
 
     /**
      * 添加文件到指定项目的目录下
      * @param projectName 项目名称
      * @param file 文件
-     * @param path 路径
      * @return 如果项目存在且添加陈工则返回true,否则返回false,如果路径错误也会返回false
      */
-    private boolean addFileToProject(String projectName, File file,String[] path) throws IOException {
+    private boolean addFileToProject(String projectName, File file){
         if(projectMap.containsKey(projectName)){
             JSONObject project = projectMap.get(projectName);
-            String suffix = file.getName().split("\\.")[file.getName().split("\\.").length-1];
-            String md5 = DigestUtils.md5Hex(file.getName() + new Random().nextInt(999));
-            FileUtils.copyFile(file,new File(project.getString("path")+"/files/"+md5+"."+suffix));
-            JSONArray targetDir = project.getJSONArray("files");
-            for (String p : path) {
-                for (Object o : targetDir) {
-                    JSONObject tmpFile = (JSONObject) o;
-                    if (tmpFile.getString("type").equals("dir") && tmpFile.getString("name").equals(p)){
-                        targetDir = tmpFile.getJSONArray("contain");
-                        break;
-                    }
-                }
-            }
-            JSONObject targetFile = new JSONObject();
-            targetFile.put("name",file.getName().split("\\.")[0]);
-            targetFile.put("type","file");
-            targetFile.put("md5",md5);
-            targetFile.put("suffix",suffix);
-            targetDir.add(targetFile);
-            FileOutputStream outputStream = new FileOutputStream(new File(project.getString("path")+"/"+project.getString("projectName")+".udp"));
-            outputStream.write(project.toJSONString().getBytes(StandardCharsets.UTF_8));
-            outputStream.close();
+            JSONArray files = project.getJSONArray("files");
+            files.add(file.getAbsolutePath());
             return true;
         }else {
             return false;
@@ -460,33 +430,18 @@ public class CustomizeView implements Component{
     /**
      * 从项目中删除指定的文件
      * @param projectName 项目名称
-     * @param path 要删除的文件再项目中的路径
      * @param fileName 文件名称
      * @return 从指定的项目中删除指定路径下的文件,如果文件不存在则返回false,如果删除成功则返回true
      */
-    private boolean rmFileOfProject(String projectName,String[] path,String fileName){
+    private boolean rmFileOfProject(String projectName,String fileName){
         if(projectMap.containsKey(projectName)) {
             JSONObject project = projectMap.get(projectName);
             JSONArray targetDir = project.getJSONArray("files");
-            for (String p : path) {
-                for (Object o : targetDir) {
-                    JSONObject tmpFile = (JSONObject) o;
-                    if (tmpFile.getString("type").equals("dir") && tmpFile.getString("name").equals(p)){
-                        targetDir = tmpFile.getJSONArray("contain");
-                        break;
-                    }
-                }
-            }
-            for (int i = 0; i < targetDir.size(); i++) {
-                JSONObject tmpFile = (JSONObject) targetDir.get(i);
-                if (tmpFile.getString("name").equals(fileName) && tmpFile.getString("type").equals("file")){
-                    targetDir.remove(i);
-                    return true;
-                }
-            }
-            return false;
+            targetDir.remove(fileName);
+            return true;
         }else return false;
     }
+
 
 
 
