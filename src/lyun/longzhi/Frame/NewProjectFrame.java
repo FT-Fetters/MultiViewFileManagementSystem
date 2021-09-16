@@ -107,4 +107,8 @@ public class NewProjectFrame extends JDialog {
     }
 
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/master

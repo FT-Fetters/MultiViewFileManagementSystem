@@ -381,6 +381,7 @@ public class FileListColumn implements Component {
 
     @Override
     public void mouseDrag(int x, int y, int key) {
+        if (!enable)return;
         if (RectangleOperation.pointInRectangle(x, y,
                 this.width - 10,
                 roller * this.height / files.size(),
