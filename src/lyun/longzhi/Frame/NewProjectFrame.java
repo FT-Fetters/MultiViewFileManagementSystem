@@ -14,10 +14,10 @@ import java.awt.event.WindowEvent;
 public class NewProjectFrame extends JDialog {
     private String projectName;
 
-    public NewProjectFrame(JFrame father){
+    public NewProjectFrame(JFrame father) {
         super(father);
         setModal(true);
-        this.setSize(LoadConfigure.getScreenWidth()/5,LoadConfigure.getScreenWidth()/12);
+        this.setSize(LoadConfigure.getScreenWidth() / 5, LoadConfigure.getScreenWidth() / 12);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.setTitle("新建项目");
@@ -28,22 +28,22 @@ public class NewProjectFrame extends JDialog {
         //label
         JLabel label = new JLabel("项目名:");
         label.setForeground(Color.white);
-        label.setBounds(25,15,50,25);
+        label.setBounds(25, 15, 50, 25);
         view.add(label);
         //text
-        JTextArea name = new JTextArea(1,10);
-        name.setBackground(new Color(38,38,38));
-        name.setBorder(BorderFactory.createLineBorder(new Color(83,83,83)));
-        name.setBounds(70,15 ,260,25);
+        JTextArea name = new JTextArea(1, 10);
+        name.setBackground(new Color(38, 38, 38));
+        name.setBorder(BorderFactory.createLineBorder(new Color(83, 83, 83)));
+        name.setBounds(70, 15, 260, 25);
         name.setForeground(Color.white);
-        Font textFont = new Font("微软雅黑",Font.PLAIN,16);
+        Font textFont = new Font("微软雅黑", Font.PLAIN, 16);
         name.setFont(textFont);
         view.add(name);
         this.add(view);
         //confirm button
         JButton confirmButton = new JButton("确认");
-        confirmButton.setBounds(100,60,80,35);
-        confirmButton.setBackground(new Color(83,83,83));
+        confirmButton.setBounds(100, 60, 80, 35);
+        confirmButton.setBackground(new Color(83, 83, 83));
         confirmButton.setForeground(Color.white);
         confirmButton.addActionListener(e -> {
             projectName = name.getText();
@@ -52,8 +52,8 @@ public class NewProjectFrame extends JDialog {
         view.add(confirmButton);
         //cancel button
         JButton cancelButton = new JButton("取消");
-        cancelButton.setBounds(200,60,80,35);
-        cancelButton.setBackground(new Color(83,83,83));
+        cancelButton.setBounds(200, 60, 80, 35);
+        cancelButton.setBackground(new Color(83, 83, 83));
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -75,21 +75,20 @@ public class NewProjectFrame extends JDialog {
         this.setVisible(true);
     }
 
-    public String getProjectName(){
+    public String getProjectName() {
         return this.projectName;
     }
 
 
+    private static class View extends JPanel implements Runnable {
 
-    private static class View extends JPanel implements Runnable{
-
-        public View(){
-            this.setBackground(new Color(36,36,36));
+        public View() {
+            this.setBackground(new Color(36, 36, 36));
         }
 
         @Override
         public void run() {
-            while (true){
+            while (true) {
                 this.repaint();
                 try {
                     Thread.sleep(10);//设置刷新延迟,防止cpu占用过高
@@ -106,9 +105,4 @@ public class NewProjectFrame extends JDialog {
         }
     }
 
-
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> origin/master
