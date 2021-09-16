@@ -54,15 +54,15 @@ public class CustomizeView implements Component {
     private final List<String> showTitle = new ArrayList<>();
     List<String> ListStr = new ArrayList<>();
 
-    Image image1 = Toolkit.getDefaultToolkit().getImage("D:\\app\\MultiViewFileManagementSystem3\\src\\lyun\\longzhi\\images\\xinjian.png");
-    Image image2 = Toolkit.getDefaultToolkit().getImage("D:\\app\\MultiViewFileManagementSystem3\\src\\lyun\\longzhi\\images\\dakai.png");
-    Image image3 = Toolkit.getDefaultToolkit().getImage("D:\\app\\MultiViewFileManagementSystem3\\src\\lyun\\longzhi\\images\\baocun.png");
-    Image image4 = Toolkit.getDefaultToolkit().getImage("D:\\app\\MultiViewFileManagementSystem3\\src\\lyun\\longzhi\\images\\fuzhi.png");
-    Image image5 = Toolkit.getDefaultToolkit().getImage("D:\\app\\MultiViewFileManagementSystem3\\src\\lyun\\longzhi\\images\\niantie.png");
-    Image image6 = Toolkit.getDefaultToolkit().getImage("D:\\app\\MultiViewFileManagementSystem3\\src\\lyun\\longzhi\\images\\jianqie.png");
-    Image image7 = Toolkit.getDefaultToolkit().getImage("D:\\app\\MultiViewFileManagementSystem3\\src\\lyun\\longzhi\\images\\charutupian.png");
-    Image image8 = Toolkit.getDefaultToolkit().getImage("D:\\app\\MultiViewFileManagementSystem3\\src\\lyun\\longzhi\\images\\charulianjie.png");
-    Image image9 = Toolkit.getDefaultToolkit().getImage("D:\\app\\MultiViewFileManagementSystem3\\src\\lyun\\longzhi\\images\\guanbi.png");
+    Image image1 = Toolkit.getDefaultToolkit().getImage("src\\lyun\\longzhi\\images\\xinjian.png");
+    Image image2 = Toolkit.getDefaultToolkit().getImage("src\\lyun\\longzhi\\images\\dakai.png");
+    Image image3 = Toolkit.getDefaultToolkit().getImage("src\\lyun\\longzhi\\images\\baocun.png");
+    Image image4 = Toolkit.getDefaultToolkit().getImage("src\\lyun\\longzhi\\images\\fuzhi.png");
+    Image image5 = Toolkit.getDefaultToolkit().getImage("src\\lyun\\longzhi\\images\\niantie.png");
+    Image image6 = Toolkit.getDefaultToolkit().getImage("src\\lyun\\longzhi\\images\\jianqie.png");
+    Image image7 = Toolkit.getDefaultToolkit().getImage("src\\lyun\\longzhi\\images\\charutupian.png");
+    Image image8 = Toolkit.getDefaultToolkit().getImage("src\\lyun\\longzhi\\images\\charulianjie.png");
+    Image image9 = Toolkit.getDefaultToolkit().getImage("src\\lyun\\longzhi\\images\\guanbi.png");
 
 
     private Color backgroundColor = new Color(57, 57, 57, 91);
