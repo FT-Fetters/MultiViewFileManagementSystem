@@ -1,10 +1,12 @@
 package lyun.longzhi.components;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lyun.longzhi.Frame.NewProjectFrame;
 import lyun.longzhi.Main;
 import lyun.longzhi.utils.ImageTools;
+import lyun.longzhi.utils.MessageBox;
 import lyun.longzhi.utils.RectangleOperation;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
@@ -50,19 +52,18 @@ public class CustomizeView implements Component {
     private final List<File> fileList = new ArrayList<>();
     private final List<String> filesName = new ArrayList<>();
     private final List<Image> icons = new ArrayList<>();
-    private final List<Integer> levels = new ArrayList<>();
     private final List<String> showTitle = new ArrayList<>();
     List<String> ListStr = new ArrayList<>();
 
-    Image image1 = Toolkit.getDefaultToolkit().getImage("D:\\app\\MultiViewFileManagementSystem3\\src\\lyun\\longzhi\\images\\xinjian.png");
-    Image image2 = Toolkit.getDefaultToolkit().getImage("D:\\app\\MultiViewFileManagementSystem3\\src\\lyun\\longzhi\\images\\dakai.png");
-    Image image3 = Toolkit.getDefaultToolkit().getImage("D:\\app\\MultiViewFileManagementSystem3\\src\\lyun\\longzhi\\images\\baocun.png");
-    Image image4 = Toolkit.getDefaultToolkit().getImage("D:\\app\\MultiViewFileManagementSystem3\\src\\lyun\\longzhi\\images\\fuzhi.png");
-    Image image5 = Toolkit.getDefaultToolkit().getImage("D:\\app\\MultiViewFileManagementSystem3\\src\\lyun\\longzhi\\images\\niantie.png");
-    Image image6 = Toolkit.getDefaultToolkit().getImage("D:\\app\\MultiViewFileManagementSystem3\\src\\lyun\\longzhi\\images\\jianqie.png");
-    Image image7 = Toolkit.getDefaultToolkit().getImage("D:\\app\\MultiViewFileManagementSystem3\\src\\lyun\\longzhi\\images\\charutupian.png");
-    Image image8 = Toolkit.getDefaultToolkit().getImage("D:\\app\\MultiViewFileManagementSystem3\\src\\lyun\\longzhi\\images\\charulianjie.png");
-    Image image9 = Toolkit.getDefaultToolkit().getImage("D:\\app\\MultiViewFileManagementSystem3\\src\\lyun\\longzhi\\images\\guanbi.png");
+    Image image1 = Toolkit.getDefaultToolkit().getImage("src\\lyun\\longzhi\\images\\xinjian.png");
+    Image image2 = Toolkit.getDefaultToolkit().getImage("src\\lyun\\longzhi\\images\\dakai.png");
+    Image image3 = Toolkit.getDefaultToolkit().getImage("src\\lyun\\longzhi\\images\\baocun.png");
+    Image image4 = Toolkit.getDefaultToolkit().getImage("src\\lyun\\longzhi\\images\\fuzhi.png");
+    Image image5 = Toolkit.getDefaultToolkit().getImage("src\\lyun\\longzhi\\images\\niantie.png");
+    Image image6 = Toolkit.getDefaultToolkit().getImage("src\\lyun\\longzhi\\images\\jianqie.png");
+    Image image7 = Toolkit.getDefaultToolkit().getImage("src\\lyun\\longzhi\\images\\charutupian.png");
+    Image image8 = Toolkit.getDefaultToolkit().getImage("src\\lyun\\longzhi\\images\\charulianjie.png");
+    Image image9 = Toolkit.getDefaultToolkit().getImage("src\\lyun\\longzhi\\images\\guanbi.png");
 
 
     private Color backgroundColor = new Color(57, 57, 57, 91);
@@ -414,10 +415,18 @@ public class CustomizeView implements Component {
         if (!dataFile.exists()) {
             try {
                 if (!dataFile.createNewFile()) return;
+                else {
+                    try {
+                        FileOutputStream outputStream = new FileOutputStream(dataFile);
+                        outputStream.write("{}".getBytes(StandardCharsets.UTF_8));
+                        outputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
         StringBuilder tmp = new StringBuilder();
         try {
@@ -440,7 +449,7 @@ public class CustomizeView implements Component {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        MessageBox.addMessage("新建项目成功!");
     }
 
     /**
@@ -467,6 +476,7 @@ public class CustomizeView implements Component {
         } else {
             //文件不存在
         }
+        MessageBox.addMessage("已添加项目!");
     }
 
 
@@ -496,7 +506,7 @@ public class CustomizeView implements Component {
      * 添加文件到指定项目的目录下
      *
      * @param projectName 项目名称
-     * @param file        文件
+     * @param file 文件
      * @return 如果项目存在且添加陈工则返回true, 否则返回false, 如果路径错误也会返回false
      */
     private boolean addFileToProject(String projectName, File file) {
@@ -504,6 +514,7 @@ public class CustomizeView implements Component {
             JSONObject project = projectMap.get(projectName);
             JSONArray files = project.getJSONArray("files");
             files.add(file.getAbsolutePath());
+            saveProject();
             return true;
         } else {
             return false;
@@ -511,44 +522,161 @@ public class CustomizeView implements Component {
     }
 
     /**
-     * 从项目中删除指定的文件
-     *
-     * @param projectName 项目名称
-     * @param fileName    文件名称
-     * @return 从指定的项目中删除指定路径下的文件, 如果文件不存在则返回false, 如果删除成功则返回true
+     * 从项目中删除文件
+     * @param projectName 项目名
+     * @param fileName 文件路径
+     * @return 是否删除成功
      */
-    private boolean rmFileOfProject(String projectName, String fileName) {
-        if (projectMap.containsKey(projectName)) {
+    private boolean rmFileFromProject(String projectName,String fileName){
+        if (projectMap.containsKey(projectName)){
             JSONObject project = projectMap.get(projectName);
-            JSONArray targetDir = project.getJSONArray("files");
-            targetDir.remove(fileName);
+            JSONArray files = project.getJSONArray("files");
+            if (files.contains(fileName)){
+                files.remove(fileName);
+                saveProject();
+                return true;
+            }else return false;
+        }else return false;
+    }
+
+    File copyFile;
+
+    /**
+     * 从项目中复制文件
+     * @param projectName 项目名称
+     * @param fileName 要复制的文件路径
+     * @return 是否复制成功
+     */
+    private boolean copyFileFromProject(String projectName,String fileName){
+        if (projectMap.containsKey(projectName)){
+            File tmpFile = new File(fileName);
+            if (tmpFile.exists()){
+                copyFile = tmpFile;
+                isShear = false;
+                return true;
+            }else return false;
+        }else return false;
+    }
+
+
+    /**
+     * 从复制文件中把文件复制到指定项目中
+     * @param projectName 项目名称
+     * @return 是否复制成功
+     */
+    private boolean pasteFileFromCopyFile(String projectName){
+        if (projectMap.containsKey(projectName)){
+            if (copyFile == null || !copyFile.exists()){
+                return false;
+            }else {
+                if (isShear){
+                    if (projectMap.containsKey(shearProject)){
+                        JSONObject preProject = projectMap.get(shearProject);
+                        JSONArray preFiles = preProject.getJSONArray("files");
+                        if (preFiles.contains(copyFile.getAbsolutePath())){
+                            preFiles.remove(copyFile.getAbsolutePath());
+                            JSONObject project = projectMap.get(projectName);
+                            JSONArray files = project.getJSONArray("files");
+                            files.add(copyFile.getAbsolutePath());
+                            saveProject();
+                            return true;
+                        }else return false;
+
+                    }else return false;
+                }else {
+                    JSONObject project = projectMap.get(projectName);
+                    JSONArray files = project.getJSONArray("files");
+                    files.add(copyFile.getAbsolutePath());
+                    saveProject();
+                    return true;
+                }
+            }
+        }else return false;
+    }
+
+    boolean isShear = false;
+    String shearProject;
+
+    /**
+     * 从指定项目中剪切文件
+     * @param projectName 项目名称
+     * @param fileName 文件路径
+     * @return 是否剪切成功
+     */
+    private boolean shearFileFromProject(String projectName,String fileName){
+        if (projectMap.containsKey(projectName)){
+            File tmpFile = new File(fileName);
+            if (tmpFile.exists()){
+                copyFile = tmpFile;
+                shearProject = projectName;
+                isShear = true;
+                return true;
+            }else return false;
+        }else return false;
+    }
+
+
+    /**
+     * 将文件从指定文件夹移动到另一个文件夹
+     * @param projectName 项目名称
+     * @param fileName 要移动的文件的路径
+     * @param newProjectName 要移动到的项目名称
+     * @return 是否移动成功
+     */
+    private boolean moveFileToNewProject(String projectName,String fileName,String newProjectName){
+        if (projectMap.containsKey(projectName) && projectName.contains(newProjectName)){
+            File tmpFile = new File(fileName);
+            if (tmpFile.exists()){
+                JSONObject project = projectMap.get(projectName);
+                JSONObject newProject = projectMap.get(newProjectName);
+                JSONArray files = project.getJSONArray("files");
+                JSONArray newFiles = newProject.getJSONArray("files");
+                if (files.contains(fileName)){
+                    files.remove(fileName);
+                    newFiles.add(fileName);
+                    saveProject();
+                    return true;
+                }else return false;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 删除项目
+     * @param projectName 要删除的项目名称
+     * @return 是否删除成功
+     */
+    private boolean rmProject(String projectName){
+        if (projectMap.containsKey(projectName)){
+            projectMap.remove(projectName);
+            saveProject();
             return true;
-        } else return false;
+        }else return false;
     }
 
-    //复制项目文件
-    private boolean copyFile(File file, String filePath, String fileName) {
-        File f = new File(filePath, fileName);
+    /**
+     * 保存项目信息
+     */
+    private void saveProject(){
+        JSONObject allProject = new JSONObject();
+        File dataFile = new File(System.getProperty("user.dir") + File.separator + "data.udp");
+        for (String key : projectMap.keySet()) {
+            allProject.put(key,projectMap.get(key));
+        }
+        String tmp = allProject.toString();
         try {
-            FileUtils.copyFile(file, f);
+            FileOutputStream outputStream = new FileOutputStream(dataFile);
+            outputStream.write(tmp.getBytes(StandardCharsets.UTF_8));
+            outputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
-        return true;
+        loadProject();
     }
 
-    //移动项目文件
-    private boolean moveFile(File file, String filePath, String fileName) {
-        File f = new File(filePath, fileName);
-        try {
-            FileUtils.moveFile(file, f);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
+
+
 
 
 }
