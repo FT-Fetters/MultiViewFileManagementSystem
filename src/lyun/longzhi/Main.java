@@ -31,11 +31,12 @@ public class Main {
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setResizable(false);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainFrame.setVisible(true);
         mainView = new MainView();
         Thread mainViewThread = new Thread(mainView);
-        mainViewThread.start();
+        mainViewThread.setPriority(10);
         mainFrame.add(mainView);
+        mainViewThread.start();
+        mainFrame.setVisible(true);
     }
 
     static void loadThread(){
