@@ -170,12 +170,12 @@ public class CustomizeView implements Component {
         graphics2D.drawImage(image6, this.x + 10, this.y + 5 + 250 + 100 + 100 + 15, null);
 
         //画一个鼠标移动到标题的交互效果
-        if (showTitle.size() < MAXSHOW && isMoveTitle) {
+        if (showTitle.size() < MAXSHOW && isMoveTitle&& isMoveTitle && showMovenum > 0 && showMovenum <= MAXSHOW && showMovenum != 0&&showMovenum<=showTitle.size()) {
             graphics2D.setColor(Color.GRAY);
-            graphics2D.fillRect(this.x + showMovenum * 208 + 130, this.y+45, 188, 2);
-        } else if (showTitle.size() >= MAXSHOW && isMoveTitle) {
+            graphics2D.fillRect(this.x + (showMovenum - 1) * 208 + 130, this.y + 45, 188, 2);
+        } else if (showTitle.size() >= MAXSHOW && isMoveTitle && showMovenum > 0 && showMovenum <= MAXSHOW && showMovenum != 0) {
             graphics2D.setColor(Color.GRAY);
-            graphics2D.fillRect(this.x + showMovenum * 208 + 120, this.y + 47, 208, 3);
+            graphics2D.fillRect(this.x + (showMovenum - 1) * 208 + 120, this.y + 47, 208, 3);
         }
 
         //画一个点击交互效果
@@ -234,8 +234,8 @@ public class CustomizeView implements Component {
                 }
             }
             for (int i = show; i < show + 5; i++) {
-                graphics2D.drawString(showTitle.get(i), (i + 5 - showTitle.size() - count) * 208 + this.x + 150, this.y + 30);
-                graphics2D.drawImage(image7, (i + 5 - showTitle.size() - count) * 208 + this.x + 300, this.y + 16, null);
+                graphics2D.drawString(showTitle.get(i), (i + MAXSHOW - showTitle.size() - count) * 208 + this.x + 150, this.y + 30);
+                graphics2D.drawImage(image7, (i + MAXSHOW - showTitle.size() - count) * 208 + this.x + 300, this.y + 16, null);
                 graphics2D.drawString(projectMap.toString(), this.x + 75, this.y + 100);
             }
         } else if (showTitle.size() <= MAXSHOW) {
@@ -300,7 +300,7 @@ public class CustomizeView implements Component {
         if (showTitle.size() <= MAXSHOW) {
             for (int i = 0; i < showTitle.size(); i++) {
                 if (RectangleOperation.pointInRectangle(x, y, i * 208 + 300, +16, i * 208 + 300 + 16, +16 + 16)) {
-                    if (isClickTitle && showClicknum == i + 1 || showClicknum == showTitle.size()) {
+                    if ((isClickTitle && showClicknum == i + 1) || showClicknum <= showTitle.size()) {
                         showClicknum = 0;
                         isClickTitle = false;
                     } else if (isClickTitle && showClicknum > i + 1) {
@@ -317,10 +317,13 @@ public class CustomizeView implements Component {
                             showTitle.remove(i);
                         }
                     }
-                    if(showTitle.size()==0){
+                    if (showTitle.size() == 0) {
                         showTitle.clear();
                         ListTitleStr.clear();
                         projectMap.clear();
+                    }
+                    if (showMovenum >= showTitle.size()) {
+                        showMovenum = 0;
                     }
                 }
             }
@@ -328,11 +331,13 @@ public class CustomizeView implements Component {
             for (int i = 0; i < 5; i++) {
                 if (RectangleOperation.pointInRectangle(x, y, (i) * 208 + 300, +16, (i) * 208 + 300 + 16, +16 + 16)) {
 
-                    if (isClickTitle && showClicknum == i + 1 || showClicknum == showTitle.size()) {
+                    if ((isClickTitle && showClicknum == i + 1) || showClicknum == showTitle.size()) {
                         showClicknum = 0;
                         isClickTitle = false;
                     } else if (isClickTitle && showClicknum > i + 1) {
                         showClicknum--;
+                    } else {
+                        isClickTitle = true;
                     }
                     for (int j = 0; j < showTitle.size(); j++) {
                         if (showTitle.get(show + i).equals(showTitle.get(j))) {
@@ -356,7 +361,7 @@ public class CustomizeView implements Component {
             for (String projectName : projectMap.keySet()) {
                 ListTitleStr.add(projectName);
             }
-            isload=true;
+            isload = true;
         }
         //点击打开项目
         if (RectangleOperation.pointInRectangle(x, y, 5, 100, 65, 165)) {
@@ -386,26 +391,8 @@ public class CustomizeView implements Component {
 
 
         }
-        if (change) {
-            if (RectangleOperation.pointInRectangle(x, y, 305, 10, 30 + 305, 20 + 20)) {
-                JFileChooser jFileChooser = new JFileChooser(filePath);
-                jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                int returnVal = jFileChooser.showOpenDialog(jFileChooser);
-                if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    filePath = jFileChooser.getSelectedFile().getAbsolutePath();
-                }
-            }
-        }
-        if (click == 1) {
-            if (RectangleOperation.pointInRectangle(x, y, 50, 10, 50 + 20, 40)) {
-                JFileChooser jFileChooser = new JFileChooser("C:\\");
-                jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                int returnVal = jFileChooser.showOpenDialog(jFileChooser);
-                if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    filePath = jFileChooser.getSelectedFile().getAbsolutePath();
-                }
-            }
-        }
+
+
     }
 
 
@@ -422,22 +409,29 @@ public class CustomizeView implements Component {
     @Override
     public void mouseMove(int x, int y) {
         if (!enable) return;
-        if (showTitle.size() < MAXSHOW) {
-            for (int i = 0; i < showTitle.size(); i++) {
-                if (RectangleOperation.pointInRectangle(x, y, i * 208 + 120, 0, i * 208 + 328, 50)) {
-                    isMoveTitle = true;
-                    showMovenum = i;
-                }
-            }
-
-        } else if (showTitle.size() >= MAXSHOW) {
-            for (int i = 0; i < MAXSHOW; i++) {
-                if (RectangleOperation.pointInRectangle(x, y, i * 208 + 120, 0, i * 208 + 328, 50)) {
-                    isMoveTitle = true;
-                    showMovenum = i;
-                }
+//        if (showTitle.size() < MAXSHOW) {
+//            for (int i = 0; i < showTitle.size(); i++) {
+//                if (RectangleOperation.pointInRectangle(x, y, i * 208 + 120, 0, i * 208 + 328, 50)) {
+//                    isMoveTitle = true;
+//                    showMovenum = i + 1;
+//                }
+//            }
+//
+//        } else if (showTitle.size() >= MAXSHOW) {
+//            for (int i = 0; i < MAXSHOW; i++) {
+//                if (RectangleOperation.pointInRectangle(x, y, i * 208 + 120, 0, i * 208 + 328, 50)) {
+//                    isMoveTitle = true;
+//                    showMovenum = i+1;
+//                }
+//            }
+//        }
+        for (int i = 0; i < MAXSHOW; i++) {
+            if (RectangleOperation.pointInRectangle(x, y, i * 208 + 120, 0, i * 208 + 328, 50)) {
+                isMoveTitle = true;
+                showMovenum = i + 1;
             }
         }
+
 
         if (!RectangleOperation.pointInRectangle(x, y, 120, 0, 1165, 50)) {
             {
