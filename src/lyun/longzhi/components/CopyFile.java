@@ -1,6 +1,7 @@
 package lyun.longzhi.components;
 
 import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
+import lyun.longzhi.Main;
 import lyun.longzhi.utils.*;
 
 import javax.swing.*;
@@ -225,6 +226,8 @@ public class CopyFile implements Component{
                 rIcons.clear();
                 rChoose = -1;
                 rRoller = 0;
+                FileListColumn fileListColumn = (FileListColumn) Main.mainView.getComponentList().get(0);
+                fileListColumn.refresh();
                 MessageBox.addMessage("已删除其它拷贝文件!");
             }
         }
