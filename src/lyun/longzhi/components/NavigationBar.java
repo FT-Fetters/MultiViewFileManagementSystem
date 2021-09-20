@@ -296,4 +296,7 @@ public class NavigationBar implements Component {
         thread.start();
     }
 
+    public int getChoose() {
+        return choose;
+    }
 }

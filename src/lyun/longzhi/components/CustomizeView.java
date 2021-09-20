@@ -831,5 +831,9 @@ public class CustomizeView implements Component {
         loadProject();
     }
 
+    public void putFile(List<File> files){
+
+    }
+
 
 }

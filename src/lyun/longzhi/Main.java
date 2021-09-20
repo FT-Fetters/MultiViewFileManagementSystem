@@ -3,8 +3,20 @@ package lyun.longzhi;
 
 import javax.swing.*;
 
+import lyun.longzhi.components.CustomizeView;
+import lyun.longzhi.components.NavigationBar;
 import lyun.longzhi.configure.LoadConfigure;
 import lyun.longzhi.view.MainView;
+
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetAdapter;
+import java.awt.dnd.DropTargetDropEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * 主类
@@ -36,6 +48,24 @@ public class Main {
         mainViewThread.setPriority(10);
         mainFrame.add(mainView);
         mainViewThread.start();
+        new DropTarget(mainFrame, DnDConstants.ACTION_COPY_OR_MOVE, new DropTargetAdapter() {
+            @Override
+            public void drop(DropTargetDropEvent dtde) {
+                NavigationBar nav = (NavigationBar) mainView.getComponentList().get(3);
+                if (nav.getChoose() == 3){
+                    if (dtde.isDataFlavorSupported(DataFlavor.javaFileListFlavor)){
+                        dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+                        try {
+                            List<File> list = (List<File>) dtde.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
+                            CustomizeView customizeView = (CustomizeView) mainView.getComponentList().get(7);
+                            customizeView.putFile(list);
+                        } catch (IOException | UnsupportedFlavorException e) {
+                            e.printStackTrace();
+                        }
+                    }else dtde.rejectDrop();
+                }else dtde.rejectDrop();
+            }
+        });
         mainFrame.setVisible(true);
     }
 
