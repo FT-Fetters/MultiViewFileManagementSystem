@@ -1,5 +1,8 @@
 package lyun.longzhi.utils;
 
+import lyun.longzhi.Frame.MessageBoxFrame;
+
+import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -49,5 +52,10 @@ public class MessageBox {
                 width/2 - FontUtils.getWordWidth(font,msg)/2,
                 height - FontUtils.getWordHeight(font)/5 - 40
                 );
+    }
+
+    public static boolean showMessageBox(String title, String msg, JFrame father){
+        MessageBoxFrame messageBoxFrame = new MessageBoxFrame(father,title,msg);
+        return messageBoxFrame.confirm;
     }
 }

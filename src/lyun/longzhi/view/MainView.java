@@ -29,7 +29,7 @@ public class MainView extends JPanel implements Runnable {
     //用于存放控件列表
     private final List<Component> componentList = new ArrayList<>();
 
-    private String path = "C:\\新建文件夹";
+    private String path = "D:\\__easyHelper__";
 
 
 
@@ -169,7 +169,7 @@ public class MainView extends JPanel implements Runnable {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                if (e.getClickCount() == 2 && SwingUtilities.isLeftMouseButton(e)){
+                if (e.getClickCount() == 2){
                     for (Component component : componentList) {
                         if (RectangleOperation.pointInRectangle(
                                 e.getX(),
@@ -180,13 +180,13 @@ public class MainView extends JPanel implements Runnable {
                                 component.getY()+component.getHeight())
                         ) {
                             try {
-                                component.mouseDoubleClick(e.getX()-component.getX(),e.getY()-component.getY(),0);
+                                component.mouseDoubleClick(e.getX()-component.getX(),e.getY()-component.getY(),e.getButton());
                             } catch (IOException ioException) {
                                 ioException.printStackTrace();
                             }
                         }
                     }
-                }else if (e.getClickCount() == 1 && SwingUtilities.isLeftMouseButton(e)){
+                }else if (e.getClickCount() == 1){
                     for (Component component : componentList) {
                         if (RectangleOperation.pointInRectangle(
                                 e.getX(),
@@ -196,7 +196,7 @@ public class MainView extends JPanel implements Runnable {
                                 component.getX()+component.getWidth(),
                                 component.getY()+component.getHeight())
                         ){
-                            component.mouseClick(e.getX()-component.getX(),e.getY()-component.getY(),0);
+                            component.mouseClick(e.getX()-component.getX(),e.getY()-component.getY(),e.getButton());
                         }
                     }
                 }

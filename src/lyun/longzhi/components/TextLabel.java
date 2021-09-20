@@ -1,6 +1,9 @@
 package lyun.longzhi.components;
 
 
+import lyun.longzhi.Frame.CopyFileFrame;
+import lyun.longzhi.Main;
+
 import java.awt.*;
 
 /**
@@ -132,6 +135,7 @@ public class TextLabel implements Component{
     public void mouseClick(int mouseX,int mouseY,int key) {
         if (!enable)return;
         System.out.println("textLabel被点击");
+        CopyFileFrame copyFileFrame = new CopyFileFrame(Main.mainFrame);
     }
 
     @Override

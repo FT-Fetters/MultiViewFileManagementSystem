@@ -226,7 +226,7 @@ public class FileListColumn implements Component {
     @Override
     public void mouseClick(int x, int y, int key) {
         if (!enable) return;
-        if (key == 0) {
+        if (key == 1) {
             if (disk) {
                 if ((x - diskX) * (x - diskX) + (y - diskY) * (y - diskY) > 6400) {
                     disk = false;
@@ -279,7 +279,7 @@ public class FileListColumn implements Component {
                     choose = (y - 10) / 30 + roller;
                 }
             }
-        } else if (key == 2) {
+        } else if (key == 3) {
             if (!(this.mouseIn > -1 && ((files.size() - maxShow) >= 0 || files.size() > mouseIn))) return;
             if (y < 10 || y > this.height - 10 || x < 10 || x > this.width - 20) return;
             if (mouseIn != -1 && !disk) {
