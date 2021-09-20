@@ -170,7 +170,7 @@ public class CustomizeView implements Component {
         graphics2D.drawImage(image6, this.x + 10, this.y + 5 + 250 + 100 + 100 + 15, null);
 
         //画一个鼠标移动到标题的交互效果
-        if (showTitle.size() < MAXSHOW && isMoveTitle&& isMoveTitle && showMovenum > 0 && showMovenum <= MAXSHOW && showMovenum != 0&&showMovenum<=showTitle.size()) {
+        if (showTitle.size() < MAXSHOW && isMoveTitle && isMoveTitle && showMovenum > 0 && showMovenum <= MAXSHOW && showMovenum != 0 && showMovenum <= showTitle.size()) {
             graphics2D.setColor(Color.GRAY);
             graphics2D.fillRect(this.x + (showMovenum - 1) * 208 + 130, this.y + 45, 188, 2);
         } else if (showTitle.size() >= MAXSHOW && isMoveTitle && showMovenum > 0 && showMovenum <= MAXSHOW && showMovenum != 0) {
@@ -236,7 +236,6 @@ public class CustomizeView implements Component {
             for (int i = show; i < show + 5; i++) {
                 graphics2D.drawString(showTitle.get(i), (i + MAXSHOW - showTitle.size() - count) * 208 + this.x + 150, this.y + 30);
                 graphics2D.drawImage(image7, (i + MAXSHOW - showTitle.size() - count) * 208 + this.x + 300, this.y + 16, null);
-                graphics2D.drawString(projectMap.toString(), this.x + 75, this.y + 100);
             }
         } else if (showTitle.size() <= MAXSHOW) {
             show = 0;
@@ -246,16 +245,28 @@ public class CustomizeView implements Component {
                 }
             }
             for (int i = 0; i < showTitle.size(); i++) {
+
                 graphics2D.drawString(showTitle.get(i), i * 208 + this.x + 150, this.y + 30);
                 graphics2D.drawImage(image7, i * 208 + this.x + 300, this.y + 16, null);
-                graphics2D.drawString(projectMap.toString(), this.x + 75, this.y + 100);
             }
         }
+        for (int i = roller; i < Math.min(fileList.size(), roller + maxShow); i++) {
+            if (i < fileList.size()) {
+                System.out.println(123456);
+                graphics2D.drawString(fileList.toString(), this.x + 75, this.y + 100 + (i - roller) * 30);
+            }
+            if (i < icons.size()) {
+                graphics2D.drawImage(icons.get(i), this.x + 75, this.y + 100 + (i - roller) * 30, null);
+            }
 
+            graphics2D.drawString(fileList.toString(), this.x + 75, this.y + 100);
+        }
+        graphics2D.drawString(projectMap.toString(), this.x + 75, this.y + 100);
         //画滚动条
-        g.setColor(new Color(77, 77, 77));
-        if (size > maxShow)
-            g.fillRect(this.x + 10 + this.width - 15, this.y + roller * this.height / size, 10, this.height * maxShow / size);
+        if(fileList.size()*50>maxShow){
+            g.setColor(new Color(77, 77, 77));
+            g.fillRect(this.x + 10 + this.width - 23, this.y +52+ roller * this.height/fileList.size(), 10, this.height * maxShow/fileList.size() );
+        }
 
     }
 
@@ -284,6 +295,8 @@ public class CustomizeView implements Component {
                 if (RectangleOperation.pointInRectangle(x, y, i * 208 + 120, 0, i * 208 + 328, 50)) {
                     isClickTitle = true;
                     showClicknum = i + 1;
+                    switchProject(showTitle.get(i));
+                    System.out.println(showClicknum);
                 }
             }
 
@@ -292,6 +305,7 @@ public class CustomizeView implements Component {
                 if (RectangleOperation.pointInRectangle(x, y, i * 208 + 120, 0, i * 208 + 328, 50)) {
                     isClickTitle = true;
                     showClicknum = i + 1;
+                    switchProject(showTitle.get(i));
                 }
             }
         }
@@ -300,11 +314,15 @@ public class CustomizeView implements Component {
         if (showTitle.size() <= MAXSHOW) {
             for (int i = 0; i < showTitle.size(); i++) {
                 if (RectangleOperation.pointInRectangle(x, y, i * 208 + 300, +16, i * 208 + 300 + 16, +16 + 16)) {
-                    if ((isClickTitle && showClicknum == i + 1) || showClicknum <= showTitle.size()) {
-                        showClicknum = 0;
-                        isClickTitle = false;
-                    } else if (isClickTitle && showClicknum > i + 1) {
-                        showClicknum--;
+
+                    if (showClicknum > i + 1) {
+                        showClicknum=showClicknum-1;
+                        isClickTitle=true;
+                        System.out.println(showClicknum);
+                    }else if(showClicknum==i+1){
+                        isClickTitle=false;
+                    }else if(showClicknum<i+1){
+                        isClickTitle=true;
                     }
 
                     for (int j = 0; j < showTitle.size(); j++) {
@@ -331,13 +349,12 @@ public class CustomizeView implements Component {
             for (int i = 0; i < 5; i++) {
                 if (RectangleOperation.pointInRectangle(x, y, (i) * 208 + 300, +16, (i) * 208 + 300 + 16, +16 + 16)) {
 
-                    if ((isClickTitle && showClicknum == i + 1) || showClicknum == showTitle.size()) {
+                    if ((isClickTitle && showClicknum == i + 1) || showClicknum >= showTitle.size()) {
                         showClicknum = 0;
                         isClickTitle = false;
                     } else if (isClickTitle && showClicknum > i + 1) {
                         showClicknum--;
-                    } else {
-                        isClickTitle = true;
+                        isClickTitle=true;
                     }
                     for (int j = 0; j < showTitle.size(); j++) {
                         if (showTitle.get(show + i).equals(showTitle.get(j))) {
@@ -363,13 +380,9 @@ public class CustomizeView implements Component {
             }
             isload = true;
         }
-        //点击打开项目
+        //点击添加文件
         if (RectangleOperation.pointInRectangle(x, y, 5, 100, 65, 165)) {
-            loadProject();
-            for (String projectName : projectMap.keySet()) {
-                ListTitleStr.add(projectName);
-            }
-            isload = true;
+
         }
         //点击移动项目文件
         if (RectangleOperation.pointInRectangle(x, y, 5, 195, 65, 250)) {
@@ -383,11 +396,16 @@ public class CustomizeView implements Component {
         }
         //点击剪切项目文件
         if (RectangleOperation.pointInRectangle(x, y, 5, 370, 65, 435)) {
+            if(isClickTitle&&fileList.size()!=0)
+            shearFileFromProject(showTitle.get(showClicknum),showTitle.get(showClicknum));
 
 
         }
         //点击删除项目文件
         if (RectangleOperation.pointInRectangle(x, y, 5, 470, 65, 535)) {
+            if(isClickTitle&&fileList.size()!=0){
+                rmFileFromProject(showTitle.get(showClicknum),showTitle.get(showClicknum));
+            }
 
 
         }
@@ -618,6 +636,7 @@ public class CustomizeView implements Component {
      * @return 如果项目已导入并切换成功则返回true, 否则返回false
      */
     private boolean switchProject(String projectName) {
+        System.out.println(1564);
         if (projectMap.containsKey(projectName)) {
             JSONObject project = projectMap.get(projectName);
             JSONArray files = project.getJSONArray("files");
